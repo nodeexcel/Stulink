@@ -1,3 +1,3 @@
 const response = require("./responseMessage");
-
-module.exports = {response};
+const multerUpload = require("./multerStorage");
+module.exports = {response, multerUpload};

@@ -1,3 +1,3 @@
 const User = require("./users");
-
-module.exports = {User};
+const College = require("./college");
+module.exports = {User, College};

@@ -5,7 +5,7 @@ let cookieParser = require("cookie-parser");
 // var logger = require("morgan");
 // const cors = require('cors')
 // let indexRouter = require("./routes/index");
-let {root ,users} = require("./routes");
+let {root ,users, college} = require("./routes");
 
 let app = express();
 
@@ -22,7 +22,7 @@ app.use(cookieParser());
 
 app.use("/", root);
 app.use("/users", users);
-
+app.use("/college", college);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
