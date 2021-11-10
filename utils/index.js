@@ -1,3 +1,5 @@
 const response = require("./responseMessage");
 const multerUpload = require("./multerStorage");
-module.exports = {response, multerUpload};
+const cloudy = require("./cloudinaryStorage");
+
+module.exports = {response, multerUpload, cloudy};

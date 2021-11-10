@@ -10,14 +10,14 @@ let homePage = async (req, res) => {
   }
 };
 
-let getImage = async(req,res) => {
-  try {
-    let result = await db.College.getImage(req);
-    res.contentType("image/jpeg");
-    res.status(200).send(response(result.error, result.message, result.data));
-  } catch (error) {
-    res.status(500).send(response(1, error.message));
-  }
-}
+// let getImage = async(req,res) => {
+//   try {
+//     let result = await db.College.getImage(req);
+//     res.contentType("image/jpeg");
+//     res.status(200).send(response(result.error, result.message, result.data));
+//   } catch (error) {
+//     res.status(500).send(response(1, error.message));
+//   }
+// }
 
 module.exports = { homePage,getImage };
