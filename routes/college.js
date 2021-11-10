@@ -8,5 +8,5 @@ router.post(
   multerUpload.upload.single("image"),
   college.homePage
 );
-// router.get("/getCollegeImage", college.getImage);
+// router.get("/getCourses", college.getCourses);
 module.exports = router;

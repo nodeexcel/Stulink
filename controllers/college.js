@@ -10,14 +10,13 @@ let homePage = async (req, res) => {
   }
 };
 
-// let getImage = async(req,res) => {
+// let getCourses = async(req,res) => {
 //   try {
-//     let result = await db.College.getImage(req);
-//     res.contentType("image/jpeg");
+//     let result = await db.College.courseData(req);
 //     res.status(200).send(response(result.error, result.message, result.data));
 //   } catch (error) {
 //     res.status(500).send(response(1, error.message));
 //   }
 // }
 
-module.exports = { homePage,getImage };
+module.exports = { homePage };
