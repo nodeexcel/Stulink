@@ -1,5 +1,7 @@
 function user(database, type) {
+  const jwt = require("jsonwebtoken");
   const bcrypt = require("bcrypt");
+  const secret = require("../config");
   const User = database.define(
     "user",
     {
@@ -64,9 +66,18 @@ function user(database, type) {
           college: req.body.college,
           stream: req.body.stream,
         };
+        let createdUser = await User.create(user);
+        const token = await jwt.sign(
+          { user_id: createdUser.id, email: createdUser.email },
+          secret.jwtSecret,
+          { expiresIn: "2hr" }
+        );
         result = {
           error: 0,
-          data: await User.create(user),
+          data: {
+            createdUser,
+            token,
+          },
           message: "created",
         };
         return result;
