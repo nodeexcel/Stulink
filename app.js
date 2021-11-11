@@ -2,10 +2,9 @@ let createError = require("http-errors");
 let express = require("express");
 let path = require("path");
 let cookieParser = require("cookie-parser");
-// var logger = require("morgan");
+// let logger = require("morgan");
 // const cors = require('cors')
-// let indexRouter = require("./routes/index");
-let { root, users, college, course,news } = require("./routes");
+let { root, users, college, course, news, jobs, states} = require("./routes");
 
 let app = express();
 
@@ -25,6 +24,8 @@ app.use("/users", users);
 app.use("/college", college);
 app.use("/course", course);
 app.use("/news", news);
+app.use("/jobs", jobs);
+app.use("/states", states);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
