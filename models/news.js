@@ -8,13 +8,9 @@ function news(database, type) {
         type: type.STRING,
         allowNull: false,
       },
-        //   date: {
-        //     type: type.INTEGER,
-        //   },
       name: {
         type: type.STRING,
         allowNull: false,
-        //   unique: true,
       },
       topic: {
         type: type.STRING,
@@ -24,7 +20,8 @@ function news(database, type) {
         type: type.STRING,
         allowNull: false,
       },
-    },{ timestamps: true, updatedAt: false }
+    },
+    { timestamps: true, updatedAt: false }
   );
   News.latestNews = async (req) => {
     try {
@@ -37,11 +34,23 @@ function news(database, type) {
         about: req.body.about,
       };
       let createdImage = await News.create(image);
-    //   console.log(createdImage.createdAt);
       let result = {
         error: 0,
         message: "created",
         data: createdImage,
+      };
+      return result;
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+  News.getNews = async () => {
+    try {
+      let data = await News.findAll({});
+      let result = {
+        error: 0,
+        message: "found data",
+        data: data,
       };
       return result;
     } catch (error) {

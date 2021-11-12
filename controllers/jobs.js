@@ -1,6 +1,6 @@
 const db = require("../db");
 const { response } = require("../utils");
-let homePageJobs = async (req, res) => {
+let addJobsData = async (req, res) => {
   try {
     let result = await db.Jobs.addJobs(req);
     res.status(200).send(response(result.error, result.message, result.data));
@@ -9,4 +9,4 @@ let homePageJobs = async (req, res) => {
   }
 };
 
-module.exports = { homePageJobs };
+module.exports = { addJobsData };

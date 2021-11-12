@@ -27,12 +27,7 @@ function college(database, type) {
     models.Course.hasMany(College, {foreignKey: "courseId" });
   };
 
-  // Job.associate = (models) => {
-  //   models.States.hasMany(Job, {
-  //     foreignKey: "stateId",
-  //   });
-  // };
-  College.trending = async (req) => {
+  College.addtrending = async (req) => {
     try {
       let data = req.file.path;
       let uploadedImage = await cloudinary.v2.uploader.upload(data);

@@ -1,9 +1,8 @@
 const users = require("./users");
+const homepage = require("./homepage");
 const college = require("./college");
-const course = require("./course");
-const news = require("./news");
 const jobs = require("./jobs");
+const news = require("./news");
 const states = require("./states");
-// const collegeCourse = require("./courseCollege");
-module.exports = { users, college, course, news, jobs, states,}
-    //  collegeCourse };
+const course = require("./course");
+module.exports = { users, homepage, college, jobs, news, states, course };

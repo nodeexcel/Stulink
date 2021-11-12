@@ -161,7 +161,7 @@ function courses(database, type) {
       throw new Error(error);
     }
   };
-  Courses.courseData = async (models) => {
+  Courses.courseDataCount = async (models) => {
     try {
       let foundCourse = await Courses.findAll({
         attributes: {
