@@ -4,7 +4,7 @@ let path = require("path");
 let cookieParser = require("cookie-parser");
 // let logger = require("morgan");
 // const cors = require('cors')
-let { root, users, homePage, college, jobs, course ,states, news} = require("./routes");
+let { root, users, homePage, college, jobs, course ,states, news,search} = require("./routes");
 
 let app = express();
 
@@ -27,6 +27,7 @@ app.use("/college", college);
 app.use("/jobs", jobs);
 app.use("/states", states);
 app.use("/news", news);
+app.use("/searchpage", search);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));

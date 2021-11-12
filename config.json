@@ -1,4 +1,4 @@
 {
-    "psql_url" : "postgres://cisoadmin:cisopassword@127.0.0.1:5432/stulink",
+    "psql_url" : "postgres://postgres:12345@127.0.0.1:5432/stulink",
     "jwtSecret" : "qwerty"
 }
