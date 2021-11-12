@@ -1,5 +1,6 @@
 function college(database, type) {
   // const fs = require("fs");
+  const { Op } = require("sequelize");
   const cloudinary = require("cloudinary");
   const College = database.define(
     "colleges",
@@ -15,7 +16,19 @@ function college(database, type) {
         type: type.STRING,
         unique: true,
       },
-      place: {
+      state: {
+        type: type.STRING,
+        allowNull: false,
+      },
+      city: {
+        type: type.STRING,
+        allowNull: false,
+      },
+      coursePrice: {
+        type: type.STRING,
+        allowNull: false,
+      },
+      address: {
         type: type.STRING,
         allowNull: false,
       },
@@ -24,10 +37,10 @@ function college(database, type) {
   );
 
   College.associate = (models) => {
-    models.Course.hasMany(College, {foreignKey: "courseId" });
+    models.Course.hasMany(College, { foreignKey: "courseId" });
   };
 
-  College.addtrending = async (req) => {
+  College.addCollege = async (req) => {
     try {
       let data = req.file.path;
       let uploadedImage = await cloudinary.v2.uploader.upload(data);
@@ -35,14 +48,30 @@ function college(database, type) {
         image: uploadedImage.secure_url,
         name: req.body.name,
         rating: req.body.rating,
-        place: req.body.place,
+        address: req.body.address,
         courseId: req.body.courseId,
+        coursePrice: req.body.courseprice,
+        state: req.body.state,
+        city: req.body.city,
       };
       let createdImage = await College.create(image);
       let result = {
         error: 0,
         message: "created",
         data: createdImage,
+      };
+      return result;
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+  College.findCollegeData = async (req) => {
+    try {
+      let data = await College.findAll({});
+      let result = {
+        error: 0,
+        message: "found data",
+        data: data,
       };
       return result;
     } catch (error) {
