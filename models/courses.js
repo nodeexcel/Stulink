@@ -1,4 +1,5 @@
 function courses(database, type) {
+  const { fn, col } = require("sequelize");
   const Courses = database.define(
     "course",
     {
@@ -11,9 +12,14 @@ function courses(database, type) {
         type: type.STRING,
         allowNull: false,
       },
+      category:{
+        type: type.STRING,
+        allowNull:false,
+      }
     },
     { timestamps: false }
   );
+
   Courses.addCourse = async (req) => {
     try {
       let result;
@@ -150,6 +156,30 @@ function courses(database, type) {
           message: "can't find the data",
         };
       }
+      return result;
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+  Courses.courseData = async (models) => {
+    try {
+      let foundCourse = await Courses.findAll({
+        attributes: {
+          include: [[fn("COUNT", col("colleges.id")), "collegeCount"]],
+        },
+        include: [
+          {
+            model: models.College,
+            attributes: [],
+          },
+        ],
+        group: ["course.id"],
+      });
+      let result = {
+        error: 0,
+        message: "found data",
+        data: foundCourse,
+      };
       return result;
     } catch (error) {
       throw new Error(error);

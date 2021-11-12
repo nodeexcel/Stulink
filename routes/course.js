@@ -8,5 +8,6 @@ router.get("/getDiplomaCourse", course.getCourseDetails);
 router.get("/getUndergraduateCourse", course.getCourseDetails);
 router.get("/getPostGraduateCourse", course.getCourseDetails);
 router.get("/getPhdCourse", course.getCourseDetails);
+router.get("/getCourseCount", course.getCount);
 
 module.exports = router;

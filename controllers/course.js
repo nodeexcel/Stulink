@@ -33,4 +33,14 @@ let getCourseDetails = async (req, res) => {
   }
 };
 
-module.exports = { addCourseDetails, getCourseDetails };
+let getCount = async (req, res) => {
+  try {
+    let result = await db.Course.courseData(db);
+    res.status(200).send(response(result.error, result.message, result.data));
+  } catch (error) {
+    res.status(500).send(response(1, error.message));
+  }
+};
+
+module.exports = { addCourseDetails, getCourseDetails,
+getCount };

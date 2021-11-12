@@ -1,5 +1,5 @@
 function college(database, type) {
-  const fs = require("fs");
+  // const fs = require("fs");
   const cloudinary = require("cloudinary");
   const College = database.define(
     "colleges",
@@ -22,6 +22,16 @@ function college(database, type) {
     },
     { timestamps: false }
   );
+
+  College.associate = (models) => {
+    models.Course.hasMany(College, {foreignKey: "courseId" });
+  };
+
+  // Job.associate = (models) => {
+  //   models.States.hasMany(Job, {
+  //     foreignKey: "stateId",
+  //   });
+  // };
   College.trending = async (req) => {
     try {
       let data = req.file.path;
@@ -43,13 +53,6 @@ function college(database, type) {
       throw new Error(error);
     }
   };
-  // College.courseData = async(req) => {
-  //   try {
-      
-  //   } catch (error) {
-  //     throw new Error(error);
-  //   }
-  // }
   return College;
 }
 

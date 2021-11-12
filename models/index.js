@@ -4,4 +4,6 @@ const Course = require("./courses");
 const News = require("./news");
 const Jobs = require("./jobs");
 const States = require("./states");
-module.exports = { User, College, Course, News, Jobs, States };
+// const CollegeCourse = require("./collegeCourses")
+module.exports = { User, College, Course, News, Jobs, States, }
+    // CollegeCourse };

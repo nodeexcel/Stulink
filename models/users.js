@@ -16,7 +16,7 @@ function user(database, type) {
       username: {
         type: type.STRING,
         unique: true,
-        allowNull: false,
+        // allowNull: false,
       },
       password: {
         type: type.STRING,
