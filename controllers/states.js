@@ -5,7 +5,6 @@ let addStatesData = async (req, res) => {
     let result = await db.States.addStates(req);
     res.status(200).send(response(result.error, result.message, result.data));
   } catch (error) {
-    console.log(error);
     res.status(500).send(response(1, error.message));
   }
 };

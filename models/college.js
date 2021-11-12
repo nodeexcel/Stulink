@@ -36,6 +36,7 @@ function college(database, type) {
         name: req.body.name,
         rating: req.body.rating,
         place: req.body.place,
+        courseId: req.body.courseId,
       };
       let createdImage = await College.create(image);
       let result = {

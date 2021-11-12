@@ -8,6 +8,11 @@ let allData = async (req, res) => {
   res.json({ courseDetailsData, collegeCountData, statesData, newsData });
 };
 
+let courseDetailsForOtherPage = async (req, res) => {
+  let data = await getCourseDetails(req, res);
+  res.json(data);
+};
+
 let getCourseDetails = async (req, res) => {
   try {
     let result;
@@ -57,4 +62,4 @@ let getNewsData = async (req, res) => {
   }
 };
 
-module.exports = { allData };
+module.exports = { allData, courseDetailsForOtherPage };

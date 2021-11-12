@@ -23,7 +23,7 @@ function news(database, type) {
     },
     { timestamps: true, updatedAt: false }
   );
-  News.latestNews = async (req) => {
+  News.addlatestNews = async (req) => {
     try {
       let data = req.file.path;
       let uploadedImage = await cloudinary.v2.uploader.upload(data);

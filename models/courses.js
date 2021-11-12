@@ -26,6 +26,7 @@ function courses(database, type) {
       let createdCourse = await Courses.create({
         name: req.body.name,
         type: req.body.type,
+        category: req.body.category,
       });
       if (createdCourse !== null) {
         result = {
