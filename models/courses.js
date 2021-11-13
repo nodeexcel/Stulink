@@ -1,8 +1,13 @@
 function courses(database, type) {
   const { fn, col } = require("sequelize");
+  const cloudinary = require("cloudinary");
   const Courses = database.define(
     "course",
     {
+      image: {
+        type: type.STRING,
+        allowNull: false,
+      },
       name: {
         type: type.STRING,
         allowNull: false,
@@ -12,10 +17,10 @@ function courses(database, type) {
         type: type.STRING,
         allowNull: false,
       },
-      category:{
+      category: {
         type: type.STRING,
-        allowNull:false,
-      }
+        allowNull: false,
+      },
     },
     { timestamps: false }
   );
@@ -23,7 +28,10 @@ function courses(database, type) {
   Courses.addCourse = async (req) => {
     try {
       let result;
+      let data = req.file.path;
+      let uploadedImage = await cloudinary.v2.uploader.upload(data);
       let createdCourse = await Courses.create({
+        image: uploadedImage.secure_url,
         name: req.body.name,
         type: req.body.type,
         category: req.body.category,
