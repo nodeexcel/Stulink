@@ -3,9 +3,19 @@ const db = require("../db");
 let allData = async (req, res) => {
   let courseDetailsData = await getCourseDetails(req, res);
   let collegeCountData = await getCount(req, res);
+  let trendingCollege = await getCollegeDetails(req,res);
   let statesData = await getStatesData(req, res);
   let newsData = await getNewsData();
-  res.json({ courseDetailsData, collegeCountData, statesData, newsData });
+  res.json({ courseDetailsData,trendingCollege ,collegeCountData, statesData, newsData });
+};
+
+let getCollegeDetails = async (req, res) => {
+  try {
+    let result = await db.College.findCollegeData(db);
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 
 let courseDetailsForOtherPage = async (req, res) => {
@@ -40,7 +50,7 @@ let getCount = async (req, res) => {
     let result = await db.Course.courseDataCount(db);
     return result;
   } catch (error) {
-    console.log(error);
+    throw new Error(error);
   }
 };
 

@@ -67,7 +67,7 @@ function college(database, type) {
   };
   College.findCollegeData = async (req) => {
     try {
-      let data = await College.findAll({});
+      let data = await College.findAll({ attributes: ["name", "rating", "image", "state", "city"] });
       let result = {
         error: 0,
         message: "found data",
