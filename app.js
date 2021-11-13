@@ -4,7 +4,7 @@ let path = require("path");
 let cookieParser = require("cookie-parser");
 // let logger = require("morgan");
 
-// const cors = require('cors')
+const cors = require('cors');
 let { root, users, homePage, college, jobs, course ,states, news,search} = require("./routes");
 
 let app = express();
