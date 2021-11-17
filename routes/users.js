@@ -9,5 +9,6 @@ router.post("/login", users.login);
 router.post("/addProfile", authForAllUser, multerUpload.upload.single("image"), users.addprofiledata);
 router.get("/profile", authForAllUser,users.profilepage);
 router.post("/addPost", authForAllUser,multerUpload.upload.single("image"), users.postData);
-
+router.post("/addFriendRequest", authForAllUser, users.addFriendRequest);
+router.get("/findFriendRequest", authForAllUser, users.findFriendRequest);
 module.exports = router;
