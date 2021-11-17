@@ -15,6 +15,7 @@ const authForAllUser = async (req, res, next) => {
       req.userProfile = userProfile;
       next();
     } catch (error) {
+      console.log(error);
       res.status(401).send("Auth token invalid");
     }
   } else {

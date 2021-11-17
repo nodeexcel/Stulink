@@ -41,7 +41,6 @@ let getCourseDetails = async (req, res) => {
     // } else if (req.route.path == "/getPhdCourse") {
     //   result = await db.Course.getPhdCourse(req);
     // } else if (req.route.path == "/") {
-
     // } else {
     //   result = "not found";
     // }
