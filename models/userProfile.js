@@ -1,5 +1,5 @@
 function userprofile(database, type) {
-  const { Op,col } = require("sequelize");
+  const { Op, col } = require("sequelize");
   const cloudinary = require("cloudinary");
   const UserProfile = database.define(
     "userprofile",
@@ -30,8 +30,16 @@ function userprofile(database, type) {
     models.User.hasOne(UserProfile, {
       foreignKey: "userId",
     });
+    UserProfile.belongsToMany(models.UserProfile, {
+      through: models.FriendRequest,
+      as: "sender",
+      foreignKey: "receiver",
+    });
   };
 
+  // UserProfile.associate = (models) => {
+
+  // };
   UserProfile.addedData = async (req, models) => {
     try {
       let result;

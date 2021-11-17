@@ -1,3 +1,5 @@
+const { QueryTypes } = require("sequelize");
+
 function user(database, type) {
   const jwt = require("jsonwebtoken");
   const bcrypt = require("bcrypt");
@@ -29,9 +31,12 @@ function user(database, type) {
     { timestamps: false }
   );
 
-  User.registration = async (req) => {
+  User.registration = async (req, models) => {
     try {
       let result;
+      let friend = await models.UserProfile.findOne({
+        where: { username: req.body.friendsName },
+      });
       if (req.body.number == null) {
         if (req.body.password == null || req.body.email == null) {
           result = {
@@ -52,19 +57,47 @@ function user(database, type) {
               stream: req.body.stream,
             };
             let createdUser = await User.create(user);
+            let profile = await models.UserProfile.create({
+              image: null,
+              email: req.body.email,
+              state: req.body.state,
+              username: req.body.username,
+              university: req.body.university,
+              date_of_birth: req.body.dob,
+              bio: req.body.bio,
+              userId: createdUser.id,
+            });
             const token = await jwt.sign(
               { user_id: createdUser.id, email: createdUser.email },
               secret.jwtSecret,
               { expiresIn: "2hr" }
             );
-            result = {
-              error: 0,
-              data: {
-                createdUser,
-                token,
-              },
-              message: "created",
-            };
+            try {
+              let friendRelation = await models.FriendRequest.create({
+                sender: profile.id,
+                receiver: friend.id,
+              });
+              result = {
+                error: 0,
+                data: {
+                  createdUser,
+                  profile,
+                  friendRelation,
+                  token,
+                },
+                message: "created",
+              };
+            } catch (error) {
+              result = {
+                error: 0,
+                data: {
+                  createdUser,
+                  profile,
+                  token,
+                },
+                message: "created, no friends found",
+              };
+            }
           } else {
             result = {
               error: 1,
@@ -80,26 +113,53 @@ function user(database, type) {
           stream: req.body.stream,
         };
         let createdUser = await User.create(user);
+        let profile = await models.UserProfile.create({
+          image: null,
+          email: req.body.email,
+          state: req.body.state,
+          username: req.body.username,
+          university: req.body.university,
+          date_of_birth: req.body.dob,
+          bio: req.body.bio,
+          userId: createdUser.id,
+        });
         const token = await jwt.sign(
-          { user_id: createdUser.id, username: createdUser.username },
+          { user_id: createdUser.id, email: createdUser.email },
           secret.jwtSecret,
           { expiresIn: "2hr" }
         );
-        result = {
-          error: 0,
-          data: {
-            createdUser,
-            token,
-          },
-          message: "created",
-        };
+        try {
+          let friendRelation = await models.FriendRequest.create({
+            sender: profile.id,
+            receiver: friend.id,
+          });
+          result = {
+            error: 0,
+            data: {
+              createdUser,
+              profile,
+              friendRelation,
+              token,
+            },
+            message: "created",
+          };
+        } catch (error) {
+          result = {
+            error: 0,
+            data: {
+              createdUser,
+              profile,
+              token,
+            },
+            message: "created, no friends found",
+          };
+        }
       }
       return result;
     } catch (error) {
       throw new Error(error);
     }
   };
-
 
   User.login = async (req, models) => {
     try {

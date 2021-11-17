@@ -6,7 +6,6 @@ let registration = async (req, res) => {
     let result = await db.User.registration(req, db);
     res.status(200).send(response(result.error, result.message, result.data));
   } catch (error) {
-    console.log(error);
     res.status(500).send(response(1, error.message));
   }
 };
@@ -111,4 +110,30 @@ let postData = async (req, res) => {
   }
 };
 
-module.exports = { registration, login, profilepage, addprofiledata, postData };
+let addFriendRequest = async (req, res) => {
+  try {
+    let result = await db.FriendRequest.sendRequest(req, db);
+    res.status(200).send(response(result.error, result.message, result.data));
+  } catch (error) {
+    res.status(500).send(response(1, error.message));
+  }
+};
+
+let findFriendRequest = async(req, res) =>{
+  try {
+    let result = await db.FriendRequest.getAllRequests(req, db);
+    res.status(200).send(response(result.error, result.message, result.data));
+  } catch (error) {
+    res.status(500).send(response(1, error.message));
+  }
+}
+
+module.exports = {
+  registration,
+  login,
+  profilepage,
+  addprofiledata,
+  postData,
+  addFriendRequest,
+  findFriendRequest
+};
