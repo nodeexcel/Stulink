@@ -8,5 +8,6 @@ router.post(
   multerUpload.upload.single("image"),
   news.addNewsData
 );
+router.get("/newspage", news.getNewsData);
 
 module.exports = router;
