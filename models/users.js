@@ -1,5 +1,4 @@
 const { QueryTypes } = require("sequelize");
-
 function user(database, type) {
   const jwt = require("jsonwebtoken");
   const bcrypt = require("bcrypt");
@@ -74,7 +73,7 @@ function user(database, type) {
             );
             try {
               let friendRelation = await models.FriendRequest.create({
-                sender: profile.id,
+                senderId: profile.id,
                 receiver: friend.id,
               });
               result = {
@@ -106,52 +105,64 @@ function user(database, type) {
           }
         }
       } else if (req.body.email == null) {
-        let user = {
-          username: req.body.username,
-          number: req.body.number,
-          college: req.body.college,
-          stream: req.body.stream,
-        };
-        let createdUser = await User.create(user);
-        let profile = await models.UserProfile.create({
-          image: null,
-          email: req.body.email,
-          state: req.body.state,
-          username: req.body.username,
-          university: req.body.university,
-          date_of_birth: req.body.dob,
-          bio: req.body.bio,
-          userId: createdUser.id,
-        });
-        const token = await jwt.sign(
-          { user_id: createdUser.id, email: createdUser.email },
-          secret.jwtSecret,
-          { expiresIn: "2hr" }
-        );
-        try {
-          let friendRelation = await models.FriendRequest.create({
-            sender: profile.id,
-            receiver: friend.id,
-          });
-          result = {
-            error: 0,
-            data: {
-              createdUser,
-              profile,
-              friendRelation,
-              token,
-            },
-            message: "created",
+        const salt = await bcrypt.genSalt(10);
+        let password = req.body.password;
+        let con_password = req.body.con_password;
+        if (password == con_password) {
+          let secretPassword = await bcrypt.hash(password, salt);
+          let user = {
+            username: req.body.username,
+            number: req.body.number,
+            password: secretPassword,
+            college: req.body.college,
+            stream: req.body.stream,
           };
-        } catch (error) {
+          let createdUser = await User.create(user);
+          let profile = await models.UserProfile.create({
+            image: null,
+            email: req.body.email,
+            state: req.body.state,
+            username: req.body.username,
+            university: req.body.university,
+            date_of_birth: req.body.dob,
+            bio: req.body.bio,
+            userId: createdUser.id,
+          });
+          const token = await jwt.sign(
+            { user_id: createdUser.id, email: createdUser.email },
+            secret.jwtSecret,
+            { expiresIn: "2hr" }
+          );
+          try {
+            let friendRelation = await models.FriendRequest.create({
+              senderId: profile.id,
+              receiver: friend.id,
+            });
+            result = {
+              error: 0,
+              data: {
+                createdUser,
+                profile,
+                friendRelation,
+                token,
+              },
+              message: "created",
+            };
+          } catch (error) {
+            result = {
+              error: 0,
+              data: {
+                createdUser,
+                profile,
+                token,
+              },
+              message: "created, no friends found",
+            };
+          }
+        } else {
           result = {
-            error: 0,
-            data: {
-              createdUser,
-              profile,
-              token,
-            },
-            message: "created, no friends found",
+            error: 1,
+            message: "pasword dont match",
           };
         }
       }
@@ -207,21 +218,32 @@ function user(database, type) {
       } else if (req.body.email == null) {
         const user = await User.findOne({ where: { number: req.body.number } });
         if (user !== null) {
-          await models.Token.destroy({ where: { userId: user.id } });
-          const token = await jwt.sign(
-            { user_id: user.id, username: user.username },
-            secret.jwtSecret,
-            { expiresIn: "2hr" }
+          const validPassword = await bcrypt.compare(
+            req.body.password,
+            user.password
           );
-          let createdToken = await models.Token.create({
-            userId: user.id,
-            token: token,
-          });
-          result = {
-            error: 0,
-            message: "login successful",
-            data: createdToken,
-          };
+          if (validPassword) {
+            await models.Token.destroy({ where: { userId: user.id } });
+            const token = await jwt.sign(
+              { user_id: user.id, username: user.username },
+              secret.jwtSecret,
+              { expiresIn: "2hr" }
+            );
+            let createdToken = await models.Token.create({
+              userId: user.id,
+              token: token,
+            });
+            result = {
+              error: 0,
+              message: "login successful",
+              data: createdToken,
+            };
+          } else {
+            result = {
+              error: 1,
+              message: "password don't match",
+            };
+          }
         } else {
           result = {
             error: 1,
@@ -230,6 +252,16 @@ function user(database, type) {
         }
       }
       return result;
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+
+  User.updatedPassword = async (req) => {
+    try {
+      let user = req.user;
+      let oldPassword = req.body.oldpassword;
+      let validPassword = await bcrypt.compare()
     } catch (error) {
       throw new Error(error);
     }

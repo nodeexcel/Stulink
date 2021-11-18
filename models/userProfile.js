@@ -7,6 +7,8 @@ function userprofile(database, type) {
       image: {
         type: type.STRING,
       },
+      firstName: type.STRING,
+      lastName: type.STRING,
       email: {
         type: type.STRING,
         unique: true,
@@ -18,7 +20,9 @@ function userprofile(database, type) {
         type: type.STRING,
         unique: true,
       },
+      city: type.STRING,
       state: type.STRING,
+      country: type.STRING,
       university: type.STRING,
       date_of_birth: type.STRING,
       bio: type.STRING,
@@ -37,9 +41,6 @@ function userprofile(database, type) {
     });
   };
 
-  // UserProfile.associate = (models) => {
-
-  // };
   UserProfile.addedData = async (req, models) => {
     try {
       let result;
@@ -56,8 +57,12 @@ function userprofile(database, type) {
       let data = {
         image: uploadedImage.secure_url,
         email: email,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
         username: userData.username,
+        city: req.body.city,
         state: req.body.state,
+        country: req.body.country,
         university: req.body.university,
         date_of_birth: req.body.dob,
         bio: req.body.bio,

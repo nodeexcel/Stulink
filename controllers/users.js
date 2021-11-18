@@ -128,6 +128,15 @@ let findFriendRequest = async(req, res) =>{
   }
 }
 
+let updatePassword = async(req,res) => {
+  try {
+    let result = await db.User.updatedPassword(req);
+    res.status(200).send(response(result.error, result.message, result.data));
+  } catch (error) {
+    res.status(500).send(response(1, error.message));
+  }
+}
+
 module.exports = {
   registration,
   login,
@@ -135,5 +144,6 @@ module.exports = {
   addprofiledata,
   postData,
   addFriendRequest,
-  findFriendRequest
+  findFriendRequest,
+  updatePassword
 };
