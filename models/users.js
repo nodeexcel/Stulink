@@ -34,14 +34,11 @@ function user(database, type) {
   User.registration = async (req, models) => {
     try {
       let result;
-      let friend = await models.UserProfile.findOne({
-        where: { username: req.body.friendsName },
-      });
-      if (req.body.number == null) {
-        if (req.body.password == null || req.body.email == null) {
+      if (req.body.number == "") {
+        if (req.body.password == "" || req.body.email == "") {
           result = {
             error: 1,
-            message: "enter username and password",
+            message: "enter email and password",
           };
         } else {
           const salt = await bcrypt.genSalt(10);
@@ -49,7 +46,7 @@ function user(database, type) {
           let con_password = req.body.con_password;
           if (password == con_password) {
             let secretPassword = await bcrypt.hash(password, salt);
-            let user = {
+            let user = {  
               username: req.body.username,
               email: req.body.email,
               password: secretPassword,
@@ -73,6 +70,9 @@ function user(database, type) {
               { expiresIn: "2hr" }
             );
             try {
+              let friend = await models.UserProfile.findOne({
+                where: { username: req.body.friendsName },
+              });
               let friendRelation = await models.FriendRequest.create({
                 sender: profile.id,
                 receiver: friend.id,
@@ -101,11 +101,11 @@ function user(database, type) {
           } else {
             result = {
               error: 1,
-              message: "password don't match",
+              message: "password and confirm password should be same",
             };
           }
         }
-      } else if (req.body.email == null) {
+      } else if (req.body.email == "") {
         let user = {
           username: req.body.username,
           number: req.body.number,
@@ -129,6 +129,9 @@ function user(database, type) {
           { expiresIn: "2hr" }
         );
         try {
+          let friend = await models.UserProfile.findOne({
+            where: { username: req.body.friendsName },
+          });
           let friendRelation = await models.FriendRequest.create({
             sender: profile.id,
             receiver: friend.id,
