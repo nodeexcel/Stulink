@@ -12,6 +12,9 @@ const Friend = require("./friends");
 const Comment = require("./comments");
 const Gallery = require("./gallery");
 const FriendRequest = require("./friendRequest");
+const UserPrivacy = require("./userPrivacy");
+const UserSettings = require("./usersettings");
+
 module.exports = {
   User,
   College,
@@ -27,4 +30,6 @@ module.exports = {
   Comment,
   Gallery,
   FriendRequest,
+  UserPrivacy,
+  UserSettings,
 };

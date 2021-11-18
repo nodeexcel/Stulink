@@ -56,7 +56,7 @@ function courses(database, type) {
   Courses.getAllCourse = async (req) => {
     try {
       let result;
-      let foundCourses = await Courses.findAll({ attributes: ["name"] });
+      let foundCourses = await Courses.findAll({ attributes: ["name","type"] });
       if (foundCourses.length > 0) {
         result = {
           error: 0,
@@ -74,102 +74,7 @@ function courses(database, type) {
       throw new Error(error);
     }
   };
-  Courses.getDiplomaCourse = async (req) => {
-    try {
-      let result;
-      let foundCourses = await Courses.findAll({
-        attributes: ["name"],
-        where: { type: "diploma" },
-      });
-      if (foundCourses.length > 0) {
-        result = {
-          error: 0,
-          message: "found data",
-          data: foundCourses,
-        };
-      } else {
-        result = {
-          error: 0,
-          message: "can't find the data",
-        };
-      }
-      return result;
-    } catch (error) {
-      throw new Error(error);
-    }
-  };
-  Courses.getUndergraduateCourse = async (req) => {
-    try {
-      let result;
-      let foundCourses = await Courses.findAll({
-        attributes: ["name"],
-        where: { type: "undergraduate" },
-      });
-      if (foundCourses.length > 0) {
-        result = {
-          error: 0,
-          message: "found data",
-          data: foundCourses,
-        };
-      } else {
-        result = {
-          error: 0,
-          message: "can't find the data",
-        };
-      }
-      return result;
-    } catch (error) {
-      throw new Error(error);
-    }
-  };
-  Courses.getPostGraduateCourse = async (req) => {
-    try {
-      let result;
-      let foundCourses = await Courses.findAll({
-        attributes: ["name"],
-        where: { type: "postgraduate" },
-      });
-      if (foundCourses.length > 0) {
-        result = {
-          error: 0,
-          message: "found data",
-          data: foundCourses,
-        };
-      } else {
-        result = {
-          error: 0,
-          message: "can't find the data",
-        };
-      }
-      return result;
-    } catch (error) {
-      throw new Error(error);
-    }
-  };
-  Courses.getPhdCourse = async (req) => {
-    try {
-      let result;
-      let foundCourses = await Courses.findAll({
-        attributes: ["name"],
-        where: { type: "phd" },
-      });
-      if (foundCourses.length > 0) {
-        result = {
-          error: 0,
-          message: "found data",
-          data: foundCourses,
-        };
-      } else {
-        result = {
-          error: 0,
-          message: "can't find the data",
-        };
-      }
-      return result;
-    } catch (error) {
-      throw new Error(error);
-    }
-  };
+
   Courses.courseDataCount = async (models) => {
     try {
       let foundCourse = await Courses.findAll({

@@ -33,14 +33,11 @@ function user(database, type) {
   User.registration = async (req, models) => {
     try {
       let result;
-      let friend = await models.UserProfile.findOne({
-        where: { username: req.body.friendsName },
-      });
-      if (req.body.number == null) {
-        if (req.body.password == null || req.body.email == null) {
+      if (req.body.number == "") {
+        if (req.body.password == "" || req.body.email == "") {
           result = {
             error: 1,
-            message: "enter username and password",
+            message: "enter email and password",
           };
         } else {
           const salt = await bcrypt.genSalt(10);
@@ -66,12 +63,16 @@ function user(database, type) {
               bio: req.body.bio,
               userId: createdUser.id,
             });
+            let privacy = await models.UserPrivacy.create({userId:profile.id});
             const token = await jwt.sign(
               { user_id: createdUser.id, email: createdUser.email },
               secret.jwtSecret,
               { expiresIn: "2hr" }
             );
             try {
+              let friend = await models.UserProfile.findOne({
+                where: { username: req.body.friendsName },
+              });
               let friendRelation = await models.FriendRequest.create({
                 senderId: profile.id,
                 receiver: friend.id,
@@ -82,6 +83,7 @@ function user(database, type) {
                   createdUser,
                   profile,
                   friendRelation,
+                  privacy,
                   token,
                 },
                 message: "created",
@@ -100,15 +102,15 @@ function user(database, type) {
           } else {
             result = {
               error: 1,
-              message: "password don't match",
+              message: "password and confirm password should be same",
             };
           }
         }
       } else if (req.body.email == null) {
-        const salt = await bcrypt.genSalt(10);
         let password = req.body.password;
         let con_password = req.body.con_password;
         if (password == con_password) {
+          const salt = await bcrypt.genSalt(10);
           let secretPassword = await bcrypt.hash(password, salt);
           let user = {
             username: req.body.username,
@@ -128,6 +130,7 @@ function user(database, type) {
             bio: req.body.bio,
             userId: createdUser.id,
           });
+          let privacy = await models.UserPrivacy.create({userId:profile.id});
           const token = await jwt.sign(
             { user_id: createdUser.id, email: createdUser.email },
             secret.jwtSecret,
@@ -143,6 +146,7 @@ function user(database, type) {
               data: {
                 createdUser,
                 profile,
+                privacy,
                 friendRelation,
                 token,
               },
@@ -259,9 +263,37 @@ function user(database, type) {
 
   User.updatedPassword = async (req) => {
     try {
+      let result;
       let user = req.user;
       let oldPassword = req.body.oldpassword;
-      let validPassword = await bcrypt.compare()
+      let validPassword = await bcrypt.compare(oldPassword, user.password);
+      if (validPassword) {
+        let newPassword = req.body.newPassword;
+        let newConfPassword = req.body.newConfPassword;
+        if (newPassword == newConfPassword) {
+          const salt = await bcrypt.genSalt(10);
+          let secretPassword = await bcrypt.hash(newPassword, salt);
+          let updatedPssword = await User.update({
+            password: secretPassword,
+            where: { id: user.id },
+          });
+          result = {
+            error: 0,
+            message: "password updated",
+          };
+        } else {
+          result = {
+            error: 1,
+            message: "password dont match",
+          };
+        }
+      } else {
+        result = {
+          error: 1,
+          message: "wrong old password",
+        };
+      }
+      return result;
     } catch (error) {
       throw new Error(error);
     }

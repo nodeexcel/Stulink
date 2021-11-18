@@ -26,7 +26,18 @@ function userprofile(database, type) {
       university: type.STRING,
       date_of_birth: type.STRING,
       bio: type.STRING,
+      graduate: type.BOOLEAN,
+      postgraduate: type.BOOLEAN,
+      isDeactive: {
+        type: type.BOOLEAN,
+        defaultValue: false,
+      },
+      isClosed: {
+        type: type.BOOLEAN,
+        defaultValue: false,
+      },
     },
+
     { timestamps: false }
   );
 
@@ -100,6 +111,29 @@ function userprofile(database, type) {
           },
         ],
       });
+      return result;
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+
+  UserProfile.updateEducation = async (req) => {
+    try {
+      let userProfile = req.userProfile;
+      let result;
+      let updatedValue = await UserProfile.update(
+        {
+          college: req.body.college,
+          stream: req.body.stream,
+          postgraduate: req.body.postgraduate,
+          graduate: req.body.graduate,
+        },
+        { where: { id: userProfile.id } }
+      );
+      result = {
+        error: 0,
+        message: "education updated",
+      };
       return result;
     } catch (error) {
       throw new Error(error);
