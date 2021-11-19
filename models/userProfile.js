@@ -26,6 +26,7 @@ function userprofile(database, type) {
       university: type.STRING,
       date_of_birth: type.STRING,
       bio: type.STRING,
+      stream: type.STRING,
       graduate: type.BOOLEAN,
       postgraduate: type.BOOLEAN,
       isDeactive: {
@@ -123,7 +124,7 @@ function userprofile(database, type) {
       let result;
       let updatedValue = await UserProfile.update(
         {
-          college: req.body.college,
+          university: req.body.college,
           stream: req.body.stream,
           postgraduate: req.body.postgraduate,
           graduate: req.body.graduate,

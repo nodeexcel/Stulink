@@ -19,6 +19,7 @@ function news(database, type) {
         type: type.STRING,
         allowNull: false,
       },
+      category: type.STRING,
       related_links: type.STRING,
     },
     { timestamps: true, updatedAt: false }
@@ -40,6 +41,7 @@ function news(database, type) {
         name: req.body.name,
         topic: req.body.topic,
         about: req.body.about,
+        category: req.body.category,
         related_links: req.body.links,
       };
       let createdImage = await News.create(image);
@@ -60,7 +62,7 @@ function news(database, type) {
       throw new Error(error);
     }
   };
-  
+
   News.getNews = async () => {
     try {
       let result;
@@ -75,6 +77,27 @@ function news(database, type) {
         result = {
           error: 1,
           message: "no data found",
+        };
+      }
+      return result;
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+
+  News.getNewsById = async (req) => {
+    try {
+      let news = await News.findOne({ where: { id: req.body.id } });
+      let result;
+      if (news !== null) {
+        result = {
+          error: 0,
+          data: news,
+        };
+      } else {
+        result = {
+          error: 1,
+          message: "no news to show",
         };
       }
       return result;

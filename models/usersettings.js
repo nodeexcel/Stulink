@@ -25,7 +25,7 @@ function userSettings(database, type) {
   UserSettings.updateSettings = async (req, models) => {
     try {
       let userProfile = req.userProfile;
-      if (req.body.isDeactive == null) {
+      if (req.body.isDeactive == null && req.body.isClose == null) {
         let settings = await UserSettings.update(
           {
             privateAccount: req.body.privateAccount,
@@ -34,9 +34,14 @@ function userSettings(database, type) {
           },
           { where: { userId: userProfile.id } }
         );
-      } else if (req.body.isDeactive !== null) {
+      } else if (req.body.isDeactive == true) {
         let profile = await models.UserProfile.update(
-          { isDeactive: req.body.isDeactive, isClose: req.body.isClose },
+          { isDeactive: true },
+          { where: { id: userProfile.id } }
+        );
+      } else {
+        await models.UserProfile.update(
+          { isClosed: req.body.isClose },
           { where: { id: userProfile.id } }
         );
       }
