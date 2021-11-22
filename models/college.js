@@ -1,5 +1,6 @@
 const { Op } = require("sequelize");
 const cloudinary = require("cloudinary");
+const {res} = require("../utils");
 
 function college(database, type) {
   const College = database.define(
@@ -40,14 +41,6 @@ function college(database, type) {
     models.Course.hasMany(College, { foreignKey: "courseId" });
   };
 
-  let res = async (data) => {
-    result = {
-      error: 0,
-      message: "found data",
-      data: data,
-    };
-    return result;
-  };
   College.addCollege = async (req) => {
     try {
       let image = req.file.path;
@@ -116,7 +109,6 @@ function college(database, type) {
       }
       return result;
     } catch (error) {
-      console.log(error);
       throw new Error(error);
     }
   };
