@@ -19,6 +19,7 @@ function news(database, type) {
         type: type.STRING,
         allowNull: false,
       },
+      category: type.STRING,
       related_links: type.STRING,
     },
     { timestamps: true, updatedAt: false }
@@ -32,17 +33,20 @@ function news(database, type) {
 
   News.addlatestNews = async (req) => {
     try {
+      let userProfile = req.userProfile;
       let result;
-      let data = req.file.path;
-      let uploadedImage = await cloudinary.v2.uploader.upload(data);
-      let image = {
+      let image = req.file.path;
+      let uploadedImage = await cloudinary.v2.uploader.upload(image);
+      let data = {
         image: uploadedImage.secure_url,
-        name: req.body.name,
+        name: userProfile.username,
         topic: req.body.topic,
         about: req.body.about,
+        category: req.body.category,
         related_links: req.body.links,
+        userprofileId: userProfile.id,
       };
-      let createdImage = await News.create(image);
+      let createdImage = await News.create(data);
       if (createdImage) {
         result = {
           error: 0,
@@ -60,7 +64,7 @@ function news(database, type) {
       throw new Error(error);
     }
   };
-  
+
   News.getNews = async () => {
     try {
       let result;
@@ -75,6 +79,27 @@ function news(database, type) {
         result = {
           error: 1,
           message: "no data found",
+        };
+      }
+      return result;
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+
+  News.getNewsById = async (req) => {
+    try {
+      let news = await News.findOne({ where: { id: req.body.id } });
+      let result;
+      if (news !== null) {
+        result = {
+          error: 0,
+          data: news,
+        };
+      } else {
+        result = {
+          error: 1,
+          message: "no news to show",
         };
       }
       return result;

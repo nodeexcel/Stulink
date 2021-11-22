@@ -11,4 +11,9 @@ router.get("/profile", authForAllUser,users.profilepage);
 router.post("/addPost", authForAllUser,multerUpload.upload.single("image"), users.postData);
 router.post("/addFriendRequest", authForAllUser, users.addFriendRequest);
 router.get("/findFriendRequest", authForAllUser, users.findFriendRequest);
+router.post("/updatepassword", authForAllUser, users.updatePassword);
+router.post("/updateEducation", authForAllUser, users.updateEdu);
+router.post("/privacy", authForAllUser,users.changePrivacy)
+router.post("/accountSettings", authForAllUser, users.changeAccountSettings);
+
 module.exports = router;

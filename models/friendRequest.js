@@ -43,15 +43,8 @@ function friendRequest(database, type) {
     try {
       let userProfile = req.userProfile;
       let result;
-      let pendingRequests = await FriendRequest.findAll({
-        where: { userprofileId: userProfile.id },
-        include: [
-          {
-            model: models.UserProfile,
-            attributes: ["image", "username", "email", "state", "university"],
-            // where:{}
-          },
-        ],
+      let pendingRequests = await models.UserProfile.findAll({
+          include:["sender"],
       });
       if (pendingRequests.length > 0) {
         result = {
@@ -67,7 +60,7 @@ function friendRequest(database, type) {
       return result;
     } catch (error) {
       console.log(error);
-      throw new Error();
+      throw new Error(error);
     }
   };
 
