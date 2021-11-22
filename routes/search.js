@@ -4,5 +4,4 @@ let { search } = require("../controllers");
 
 router.get("/searchHere",search.searchedCollegeData );
 
-
 module.exports = router;

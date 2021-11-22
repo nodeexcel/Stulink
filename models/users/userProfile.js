@@ -7,6 +7,8 @@ function userprofile(database, type) {
       image: {
         type: type.STRING,
       },
+      firstName: type.STRING,
+      lastName: type.STRING,
       email: {
         type: type.STRING,
         unique: true,
@@ -18,11 +20,25 @@ function userprofile(database, type) {
         type: type.STRING,
         unique: true,
       },
+      city: type.STRING,
       state: type.STRING,
+      country: type.STRING,
       university: type.STRING,
       date_of_birth: type.STRING,
       bio: type.STRING,
+      stream: type.STRING,
+      graduate: type.BOOLEAN,
+      postgraduate: type.BOOLEAN,
+      isDeactive: {
+        type: type.BOOLEAN,
+        defaultValue: false,
+      },
+      isClosed: {
+        type: type.BOOLEAN,
+        defaultValue: false,
+      },
     },
+
     { timestamps: false }
   );
 
@@ -37,9 +53,6 @@ function userprofile(database, type) {
     });
   };
 
-  // UserProfile.associate = (models) => {
-
-  // };
   UserProfile.addedData = async (req, models) => {
     try {
       let result;
@@ -56,8 +69,12 @@ function userprofile(database, type) {
       let data = {
         image: uploadedImage.secure_url,
         email: email,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
         username: userData.username,
+        city: req.body.city,
         state: req.body.state,
+        country: req.body.country,
         university: req.body.university,
         date_of_birth: req.body.dob,
         bio: req.body.bio,
@@ -95,6 +112,29 @@ function userprofile(database, type) {
           },
         ],
       });
+      return result;
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+
+  UserProfile.updateEducation = async (req) => {
+    try {
+      let userProfile = req.userProfile;
+      let result;
+      let updatedValue = await UserProfile.update(
+        {
+          university: req.body.college,
+          stream: req.body.stream,
+          postgraduate: req.body.postgraduate,
+          graduate: req.body.graduate,
+        },
+        { where: { id: userProfile.id } }
+      );
+      result = {
+        error: 0,
+        message: "education updated",
+      };
       return result;
     } catch (error) {
       throw new Error(error);

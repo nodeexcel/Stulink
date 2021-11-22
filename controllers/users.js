@@ -119,15 +119,50 @@ let addFriendRequest = async (req, res) => {
   }
 };
 
-let findFriendRequest = async(req, res) =>{
+let findFriendRequest = async (req, res) => {
   try {
     let result = await db.FriendRequest.getAllRequests(req, db);
     res.status(200).send(response(result.error, result.message, result.data));
   } catch (error) {
     res.status(500).send(response(1, error.message));
   }
+};
+
+let updatePassword = async (req, res) => {
+  try {
+    let result = await db.User.updatedPassword(req);
+    res.status(200).send(response(result.error, result.message, result.data));
+  } catch (error) {
+    res.status(500).send(response(1, error.message));
+  }
+};
+
+let updateEdu = async (req, res) => {
+  try {
+    let result = await db.UserProfile.updateEducation(req);
+    res.status(200).send(response(result.error, result.message, result.data));
+  } catch (error) {
+    res.status(500).send(response(1, error.message));
+  }
+};
+
+let changePrivacy = async(req, res) =>{
+  try {
+    let result = await db.UserPrivacy.updatePrivacy(req);
+    res.status(200).send(response(result.error, result.message, result.data));
+  } catch (error) {
+    res.status(500).send(response(1, error.message));
+  }
 }
 
+let changeAccountSettings = async(req, res) =>{
+  try {
+    let result = await db.UserSettings.updateSettings(req,db);
+    res.status(200).send(response(result.error, result.message, result.data));
+  } catch (error) {
+    res.status(500).send(response(1, error.message));
+  }
+}
 module.exports = {
   registration,
   login,
@@ -135,5 +170,9 @@ module.exports = {
   addprofiledata,
   postData,
   addFriendRequest,
-  findFriendRequest
+  findFriendRequest,
+  updatePassword,
+  updateEdu,
+  changePrivacy,
+  changeAccountSettings
 };

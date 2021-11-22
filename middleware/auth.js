@@ -11,11 +11,15 @@ const authForAllUser = async (req, res, next) => {
       let userProfile = await db.UserProfile.findOne({
         where: { userId: checkJwt.user_id },
       });
-      req.user = checkJwt;
-      req.userProfile = userProfile;
-      next();
+      let user = await db.User.findOne({ where: { id: checkJwt.user_id } });
+      if (userProfile.isDeactive == true) {
+        res.status(401).send("your account is deactivated");
+      } else {
+        req.user = user;
+        req.userProfile = userProfile;
+        next();
+      }
     } catch (error) {
-      console.log(error);
       res.status(401).send("Auth token invalid");
     }
   } else {

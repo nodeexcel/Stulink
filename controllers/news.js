@@ -9,13 +9,22 @@ let addNewsData = async (req, res) => {
   }
 };
 
-let getNewsData = async(req,res) =>{
+let getNewsData = async (req, res) => {
   try {
     let result = await db.News.getNews();
     res.status(200).send(response(result.error, result.message, result.data));
   } catch (error) {
-    res.status(500).send(response(1,error.message));
+    res.status(500).send(response(1, error.message));
   }
-}
+};
 
-module.exports = { addNewsData,getNewsData };
+let newsById = async (req, res) => {
+  try {
+    let result = await db.News.getNewsById(req);
+    res.status(200).send(response(result.error, result.message, result.data));
+  } catch (error) {
+    res.status(500).send(response(1, error.message));
+  }
+};
+
+module.exports = { addNewsData, getNewsData, newsById };
