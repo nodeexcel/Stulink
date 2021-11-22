@@ -2,7 +2,7 @@ const { QueryTypes } = require("sequelize");
 function user(database, type) {
   const jwt = require("jsonwebtoken");
   const bcrypt = require("bcrypt");
-  const secret = require("../config");
+  const secret = require("../../config");
   const User = database.define(
     "user",
     {
