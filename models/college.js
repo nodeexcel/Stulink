@@ -1,7 +1,7 @@
+const { Op } = require("sequelize");
+const cloudinary = require("cloudinary");
+
 function college(database, type) {
-  // const fs = require("fs");
-  const { Op } = require("sequelize");
-  const cloudinary = require("cloudinary");
   const College = database.define(
     "colleges",
     {
@@ -40,11 +40,19 @@ function college(database, type) {
     models.Course.hasMany(College, { foreignKey: "courseId" });
   };
 
+  let res = async (data) => {
+    result = {
+      error: 0,
+      message: "found data",
+      data: data,
+    };
+    return result;
+  };
   College.addCollege = async (req) => {
     try {
-      let data = req.file.path;
-      let uploadedImage = await cloudinary.v2.uploader.upload(data);
-      let image = {
+      let image = req.file.path;
+      let uploadedImage = await cloudinary.v2.uploader.upload(image);
+      let data = {
         image: uploadedImage.secure_url,
         name: req.body.name,
         rating: req.body.rating,
@@ -54,11 +62,11 @@ function college(database, type) {
         state: req.body.state,
         city: req.body.city,
       };
-      let createdImage = await College.create(image);
+      let createdData = await College.create(data);
       let result = {
         error: 0,
-        message: "created",
-        data: createdImage,
+        message: "college data added",
+        data: createdData,
       };
       return result;
     } catch (error) {
@@ -67,14 +75,48 @@ function college(database, type) {
   };
   College.findCollegeData = async (req) => {
     try {
-      let data = await College.findAll({ attributes: ["name", "rating", "image", "state", "city"] });
-      let result = {
-        error: 0,
-        message: "found data",
-        data: data,
-      };
+      let data;
+      let result;
+      try {
+        data = await College.findAll({
+          attributes: ["name", "rating", "image", "state", "city"],
+          where: { name: req.body.name },
+        });
+        result = res(data);
+      } catch (error) {
+        try {
+          data = await College.findAll({
+            attributes: ["name", "rating", "image", "state", "city"],
+            where: { state: req.body.state },
+          });
+          result = res(data);
+        } catch (error) {
+          try {
+            data = await College.findAll({
+              attributes: ["name", "rating", "image", "state", "city"],
+              where: {
+                [Op.and]: [{ state: req.body.state }, { city: req.body.city }],
+              },
+            });
+            result = res(data);
+          } catch (error) {
+            try {
+              data = await College.findAll({
+                attributes: ["name", "rating", "image", "state", "city"],
+              });
+              result = await res(data);
+            } catch (error) {
+              result = {
+                error: 1,
+                message: "no colleges found",
+              };
+            }
+          }
+        }
+      }
       return result;
     } catch (error) {
+      console.log(error);
       throw new Error(error);
     }
   };
