@@ -15,5 +15,6 @@ router.post("/updatepassword", authForAllUser, users.updatePassword);
 router.post("/updateEducation", authForAllUser, users.updateEdu);
 router.post("/privacy", authForAllUser,users.changePrivacy)
 router.post("/accountSettings", authForAllUser, users.changeAccountSettings);
+router.get("/members", authForAllUser, users.getAllMembers);
 
 module.exports = router;
