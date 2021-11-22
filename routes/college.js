@@ -9,4 +9,7 @@ router.post(
   college.addCollegeData
 );
 
+router.post("/addCollegeGallery", multerUpload.upload.single("image"), college.addCollegeGallery);
+router.get("/getCollegeImages", college.getCollegeImages);
+
 module.exports = router;

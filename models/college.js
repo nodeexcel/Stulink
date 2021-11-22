@@ -1,6 +1,6 @@
 const { Op } = require("sequelize");
 const cloudinary = require("cloudinary");
-const {res} = require("../utils");
+const { res } = require("../utils");
 
 function college(database, type) {
   const College = database.define(
@@ -106,6 +106,51 @@ function college(database, type) {
             }
           }
         }
+      }
+      return result;
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+
+  College.addImages = async (req, models) => {
+    try {
+      let result;
+      let image = req.file.path;
+      let uploadedImage = await cloudinary.v2.uploader.upload(image);
+      let data = {
+        image: uploadedImage.secure_url,
+        about: req.body.about,
+        collegeId: req.body.collegeId,
+      };
+      let createdGallery = await models.Gallery.create(data);
+      result = {
+        error: 0,
+        message: "image added",
+        data: createdGallery,
+      };
+      return result;
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+
+  College.getImages = async (req, models) => {
+    try {
+      let result;
+      let images = await models.Gallery.findAll({
+        where: { collegeId: req.body.collegeId },
+      });
+      if (images.length > 0) {
+        result = {
+          error: 0,
+          data: images,
+        };
+      } else {
+        result = {
+          error: 1,
+          message: "nothing to show",
+        };
       }
       return result;
     } catch (error) {
