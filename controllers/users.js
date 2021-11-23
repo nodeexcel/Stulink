@@ -146,33 +146,43 @@ let updateEdu = async (req, res) => {
   }
 };
 
-let changePrivacy = async(req, res) =>{
+let changePrivacy = async (req, res) => {
   try {
     let result = await db.UserPrivacy.updatePrivacy(req);
     res.status(200).send(response(result.error, result.message, result.data));
   } catch (error) {
     res.status(500).send(response(1, error.message));
   }
-}
+};
 
-let changeAccountSettings = async(req, res) =>{
+let changeAccountSettings = async (req, res) => {
   try {
-    let result = await db.UserSettings.updateSettings(req,db);
+    let result = await db.UserSettings.updateSettings(req, db);
     res.status(200).send(response(result.error, result.message, result.data));
   } catch (error) {
     res.status(500).send(response(1, error.message));
   }
-}
+};
+
+let getAllMembers = async (req, res) => {
+  try {
+    let result = await db.UserProfile.getMembersData(req, db);
+    res.status(200).send(response(result.error, result.message, result.data));
+  } catch (error) {
+    res.status(500).send(response(1, error.message));
+  }
+};
 module.exports = {
-  registration,
   login,
-  profilepage,
-  addprofiledata,
   postData,
+  updateEdu,
+  profilepage,
+  registration,
+  changePrivacy,
+  getAllMembers,
+  addprofiledata,
+  updatePassword,
   addFriendRequest,
   findFriendRequest,
-  updatePassword,
-  updateEdu,
-  changePrivacy,
-  changeAccountSettings
+  changeAccountSettings,
 };

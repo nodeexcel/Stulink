@@ -1,6 +1,8 @@
+const { Op, col } = require("sequelize");
+const cloudinary = require("cloudinary");
+const { res } = require("../../utils");
+
 function userprofile(database, type) {
-  const { Op, col } = require("sequelize");
-  const cloudinary = require("cloudinary");
   const UserProfile = database.define(
     "userprofile",
     {
@@ -135,6 +137,67 @@ function userprofile(database, type) {
         error: 0,
         message: "education updated",
       };
+      return result;
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+
+  UserProfile.getMembersData = async (req) => {
+    try {
+      let data;
+      let result;
+      try {
+        data = await UserProfile.findOne({
+          attributes: [
+            "firstName",
+            "lastName",
+            "username",
+            "state",
+            "country",
+            "university",
+            "image",
+          ],
+          where: { username: req.body.username },
+        });
+        result = await res(data);
+      } catch (error) {
+        try {
+          data = await UserProfile.findAll({
+            attributes: [
+              "firstName",
+              "lastName",
+              "username",
+              "state",
+              "country",
+              "university",
+              "image",
+            ],
+            where: { university: req.body.university },
+          });
+          result = await res(data);
+        } catch (error) {
+          try {
+            data = await UserProfile.findAll({
+              attributes: [
+                "firstName",
+                "lastName",
+                "username",
+                "state",
+                "country",
+                "university",
+                "image",
+              ],
+            });
+            result = await res(data);
+          } catch (error) {
+            result = {
+              error: 1,
+              message: "no members found",
+            };
+          }
+        }
+      }
       return result;
     } catch (error) {
       throw new Error(error);

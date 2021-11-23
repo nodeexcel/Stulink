@@ -10,6 +10,7 @@ function gallery(database, type) {
   );
   Gallery.associate = (models) => {
     models.UserProfile.hasMany(Gallery, { foriegnKey: "userId" });
+    models.College.hasMany(Gallery, { foriegnKey: "collegeId" });
   };
 
   Gallery.addGallery = async (req, res) => {
@@ -63,6 +64,9 @@ function gallery(database, type) {
       throw new Error(error);
     }
   };
+
+  
+
   return Gallery;
 }
 
