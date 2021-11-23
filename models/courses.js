@@ -21,6 +21,7 @@ function courses(database, type) {
         type: type.STRING,
         allowNull: false,
       },
+      branch: type.STRING,
     },
     { timestamps: false }
   );
@@ -76,7 +77,7 @@ function courses(database, type) {
   };
 
   Courses.courseDataCount = async (models) => {
-    try {
+    try { 
       let foundCourse = await Courses.findAll({
         attributes: {
           include: [[fn("COUNT", col("colleges.id")), "collegeCount"]],
