@@ -148,6 +148,9 @@ function user(database, type) {
             { expiresIn: "2hr" }
           );
           try {
+            let friend = await models.UserProfile.findOne({
+              where: { username: req.body.friendsName },
+            });
             let friendRelation = await models.FriendRequest.create({
               senderId: profile.id,
               receiver: friend.id,

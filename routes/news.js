@@ -10,7 +10,8 @@ router.post(
   authForAllUser,
   news.addNewsData
 );
-router.get("/newspage", authForAllUser, news.getNewsData);
-router.get("/newsById", authForAllUser, news.newsById);
+// authForAllUser,
+router.get("/newspage",  news.getNewsData);
+router.get("/newsById", news.newsById);
 
 module.exports = router;

@@ -12,8 +12,9 @@ let http = require("http");
  * Get port from environment and store in Express.
  */
 
-let port = normalizePort(process.env.PORT || "8040");
-app.set("port", port);
+var port = normalizePort(process.env.PORT || '8041');
+app.set('port', port);
+
 
 /**
  * Create HTTP server.
