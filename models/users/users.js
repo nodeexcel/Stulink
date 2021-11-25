@@ -170,7 +170,6 @@ function user(database, type) {
       }else {
         var user = await User.findOne({ where: { number: req.body.number } });
       }
-      
       if (user !== null) {
           const validPassword = await bcrypt.compare(
             req.body.password,
@@ -192,17 +191,20 @@ function user(database, type) {
               message: "login successful",
               data: createdToken,
             };
+            return result
           } else {
             result = {
               error: 1,
               message: "password don't match",
             };
+            return result
           }
         } else {
           result = {
             error: 1,
             message: "user not found",
           };
+          return result
         }
       } 
       catch (error) {
