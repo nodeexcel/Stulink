@@ -1,6 +1,9 @@
 const db = require("../db");
 const { Op } = require("sequelize");
 const { response } = require("../utils");
+
+
+
 let registration = async (req, res) => {
   try {
     let result = await db.User.registration(req, db);
@@ -90,9 +93,9 @@ let findTopic = async (req, res) => {
     let result = await db.Topic.findAll({
       attributes: ["name", "details"],
       where: { userId: { [Op.ne]: userProfile.id } },
-    });
+    });  
     if (result.length > 0) {
-      return result;
+      return result;  
     } else {
       return "no trending topic to show";
     }

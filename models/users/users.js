@@ -7,7 +7,7 @@ function user(database, type) {
     "user",
     {
       number: {
-        type: type.INTEGER,
+        type: type.STRING,
         unique: true,
       },
       email: {
@@ -33,166 +33,128 @@ function user(database, type) {
   User.registration = async (req, models) => {
     try {
       let result;
+      const salt = await bcrypt.genSalt(10);
+      let password = req.body.password;
+      let con_password = req.body.con_password;
+      if (password != con_password){
+        result = {
+          error: 1,
+          message: "password and confirm password should be same",
+        };
+        return result
+      }
+      let secretPassword = await bcrypt.hash(password, salt);
       if (req.body.number == null) {
         if (req.body.password == null || req.body.email == null) {
           result = {
             error: 1,
             message: "enter email and password",
           };
-        } else {
-          const salt = await bcrypt.genSalt(10);
-          let password = req.body.password;
-          let con_password = req.body.con_password;
-          if (password == con_password) {
-            let secretPassword = await bcrypt.hash(password, salt);
-            let user = {
-              username: req.body.username,
-              email: req.body.email,
-              password: secretPassword,
-              college: req.body.college,
-              stream: req.body.stream,
-            };
-            let createdUser = await User.create(user);
-            let profile = await models.UserProfile.create({
-              image: null,
-              email: req.body.email,
-              state: req.body.state,
-              username: req.body.username,
-              university: req.body.university,
-              date_of_birth: req.body.dob,
-              bio: req.body.bio,
-              userId: createdUser.id,
-            });
-            let privacy = await models.UserPrivacy.create({
-              userId: profile.id,
-            });
-            let settings = await models.UserSettings.create({
-              userId: profile.id,
-            });
-            const token = await jwt.sign(
-              { user_id: createdUser.id, email: createdUser.email },
-              secret.jwtSecret,
-              { expiresIn: "2hr" }
-            );
-            try {
-              let friend = await models.UserProfile.findOne({
-                where: { username: req.body.friendsName },
-              });
-              let friendRelation = await models.FriendRequest.create({
-                senderId: profile.id,
-                receiver: friend.id,
-              });
-              result = {
-                error: 0,
-                data: {
-                  createdUser,
-                  profile,
-                  friendRelation,
-                  privacy,
-                  settings,
-                  token,
-                },
-                message: "created",
-              };
-            } catch (error) {
-              result = {
-                error: 0,
-                data: {
-                  createdUser,
-                  profile,
-                  privacy,
-                  settings,
-                  token,
-                },
-                message: "created, no friends found",
-              };
-            }
-          } else {
-            result = {
-              error: 1,
-              message: "password and confirm password should be same",
-            };
-          }
-        }
-      } else if (req.body.email == null) {
-        let password = req.body.password;
-        let con_password = req.body.con_password;
-        if (password == con_password) {
-          const salt = await bcrypt.genSalt(10);
-          let secretPassword = await bcrypt.hash(password, salt);
-          let user = {
-            username: req.body.username,
-            number: req.body.number,
-            password: secretPassword,
-            college: req.body.college,
-            stream: req.body.stream,
-          };
-          let createdUser = await User.create(user);
-          let profile = await models.UserProfile.create({
-            image: null,
-            email: req.body.email,
-            state: req.body.state,
-            username: req.body.username,
-            university: req.body.university,
-            date_of_birth: req.body.dob,
-            bio: req.body.bio,
-            userId: createdUser.id,
-          });
-          let privacy = await models.UserPrivacy.create({ userId: profile.id });
-          let settings = await models.UserSettings.create({
-            userId: profile.id,
-          });
-          const token = await jwt.sign(
-            { user_id: createdUser.id, email: createdUser.email },
-            secret.jwtSecret,
-            { expiresIn: "2hr" }
-          );
-          try {
-            let friend = await models.UserProfile.findOne({
-              where: { username: req.body.friendsName },
-            });
-            let friendRelation = await models.FriendRequest.create({
-              senderId: profile.id,
-              receiver: friend.id,
-            });
-            result = {
-              error: 0,
-              data: {
-                createdUser,
-                profile,
-                privacy,
-                friendRelation,
-                settings,
-                token,
-              },
-              message: "created",
-            };
-          } catch (error) {
-            result = {
-              error: 0,
-              data: {
-                createdUser,
-                profile,
-                privacy,
-                settings,
-                token,
-              },
-              message: "created, no friends found",
-            };
-          }
-        } else {
+          return result
+        } 
+        var check_user = await User.findOne({ where: { email: req.body.email } });
+        var user = {
+          username: req.body.username,
+          email: req.body.email,
+          password: secretPassword,
+          college: req.body.college,
+          stream: req.body.stream,
+        };
+        }else {
+        var check_user = await User.findOne({ where: { number: req.body.number } });  
+        var user = {
+          username: req.body.username,
+          number: req.body.number,
+          password: secretPassword,
+          college: req.body.college,
+          stream: req.body.stream,
+        };
+      }
+
+
+        if (check_user != null){
+        if (check_user.email == req.body.email){
           result = {
             error: 1,
-            message: "pasword dont match",
+            message: "user with this email already exists",
           };
+          return result
         }
-      }
-      return result;
-    } catch (error) {
-      throw new Error(error);
-    }
-  };
+        if (check_user.username == req.body.username){
+          result = {
+            error: 1,
+            message: "user with this username already exists",
+          };
+          return result
+        }}
 
+
+        let createdUser = await User.create(user);
+        let profile = await models.UserProfile.create({
+          image: null,
+          email: req.body.email,
+          state: req.body.state,
+          username: req.body.username,
+          university: req.body.university,
+          date_of_birth: req.body.dob,
+          bio: req.body.bio,
+          userId: createdUser.id,
+        });
+        let privacy = await models.UserPrivacy.create({
+          userId: profile.id,
+        });
+        let settings = await models.UserSettings.create({
+          userId: profile.id,
+        });
+        const token = await jwt.sign(
+          { user_id: createdUser.id, email: createdUser.email },
+          secret.jwtSecret,
+          { expiresIn: "2hr" }
+        );
+        try {
+          let friend = await models.UserProfile.findOne({
+            where: { username: req.body.friendsName },
+          });
+          let friendRelation = await models.FriendRequest.create({
+            senderId: profile.id,
+            receiver: friend.id,
+          });
+          result = {
+            error: 0,
+            data: {
+              createdUser,
+              profile,
+              friendRelation,
+              privacy,
+              settings,
+              token,
+            },
+            message: "created",
+          };
+          return result
+        } catch (error) {
+          result = {
+            error: 0,
+            data: {
+              createdUser,
+              profile,
+              privacy,
+              settings,
+              token,
+            },
+            message: "created, no friends found",
+          };
+          return result
+        }
+      } catch (error) {
+        result = {
+          error: error,
+          message: "something went wrong",
+        };
+        return result
+      }}
+      
+      
   User.login = async (req, models) => {
     try {
       let result;
@@ -201,79 +163,49 @@ function user(database, type) {
           error: 1,
           message: "enter number or email",
         };
-      } else if (req.body.number == null) {
-        const user = await User.findOne({ where: { email: req.body.email } });
-        if (user !== null) {
-          const validPassword = await bcrypt.compare(
-            req.body.password,
-            user.password
-          );
-          if (validPassword) {
-            await models.Token.destroy({ where: { userId: user.id } });
-            const token = await jwt.sign(
-              { user_id: user.id, username: user.username },
-              secret.jwtSecret,
-              { expiresIn: "2hr" }
-            );
-            let createdToken = await models.Token.create({
-              userId: user.id,
-              token: token,
-            });
-            result = {
-              error: 0,
-              message: "login successful",
-              data: createdToken,
-            };
-          } else {
-            result = {
-              error: 1,
-              message: "password don't match",
-            };
-          }
-        } else {
-          result = {
-            error: 1,
-            message: "user not found",
-          };
-        }
-      } else if (req.body.email == null) {
-        const user = await User.findOne({ where: { number: req.body.number } });
-        if (user !== null) {
-          const validPassword = await bcrypt.compare(
-            req.body.password,
-            user.password
-          );
-          if (validPassword) {
-            await models.Token.destroy({ where: { userId: user.id } });
-            const token = await jwt.sign(
-              { user_id: user.id, username: user.username },
-              secret.jwtSecret,
-              { expiresIn: "2hr" }
-            );
-            let createdToken = await models.Token.create({
-              userId: user.id,
-              token: token,
-            });
-            result = {
-              error: 0,
-              message: "login successful",
-              data: createdToken,
-            };
-          } else {
-            result = {
-              error: 1,
-              message: "password don't match",
-            };
-          }
-        } else {
-          result = {
-            error: 1,
-            message: "user not found",
-          };
-        }
+        return result
+      } 
+      if (req.body.number == null) {
+        var user = await User.findOne({ where: { email: req.body.email } });
+      }else {
+        var user = await User.findOne({ where: { number: req.body.number } });
       }
-      return result;
-    } catch (error) {
+      
+      if (user !== null) {
+          const validPassword = await bcrypt.compare(
+            req.body.password,
+            user.password
+          );
+          if (validPassword) {
+            await models.Token.destroy({ where: { userId: user.id } });
+            const token = await jwt.sign(
+              { user_id: user.id, username: user.username },
+              secret.jwtSecret,
+              { expiresIn: "2hr" }
+            );
+            let createdToken = await models.Token.create({
+              userId: user.id,
+              token: token,
+            });
+            result = {
+              error: 0,
+              message: "login successful",
+              data: createdToken,
+            };
+          } else {
+            result = {
+              error: 1,
+              message: "password don't match",
+            };
+          }
+        } else {
+          result = {
+            error: 1,
+            message: "user not found",
+          };
+        }
+      } 
+      catch (error) {
       throw new Error(error);
     }
   };
@@ -289,7 +221,7 @@ function user(database, type) {
         if (newPassword == oldPassword) {
           result = {
             error: 1,
-            message: "try new password",
+            message: "you are using old password. please try new password",
           };
         } else {
           let newConfPassword = req.body.newConfPassword;
