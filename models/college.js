@@ -70,6 +70,18 @@ function college(database, type) {
     try {
       let data;
       let result;
+      let states = [];
+      let city = [];
+      data = await College.findAll({attributes: ["state", "city"]});
+      for(let state in data){
+        states.push(data[state].state);
+        city.push(data[state].city);
+      }
+      function onlyUnique(value, index, self) {
+        return self.indexOf(value) === index;
+      }
+      let uniqueStates = states.filter(onlyUnique);
+      let uniqueCity = city.filter(onlyUnique);
       try {
         data = await College.findAll({
           attributes: ["name", "rating", "image", "state", "city"],
@@ -107,6 +119,8 @@ function college(database, type) {
           }
         }
       }
+      result.states = uniqueStates;
+      result.city = uniqueCity;
       return result;
     } catch (error) {
       throw new Error(error);

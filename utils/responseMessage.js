@@ -1,4 +1,4 @@
-const responseMessage = (errStatus, text, data) => {
+const responseMessage = (errStatus, text, data, states, city) => {
     let response = {
       error: errStatus,
       message: text,
@@ -7,4 +7,14 @@ const responseMessage = (errStatus, text, data) => {
     return response;
   };
 
-module.exports = responseMessage;
+const searchPageMessage = (errStatus, text, data, states, city) => {
+  let response = {
+    error: errStatus,
+    message: text,
+    data: data,
+    states: states,
+    city: city
+  };
+  return response;
+};
+module.exports = {responseMessage, searchPageMessage};
