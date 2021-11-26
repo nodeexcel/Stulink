@@ -17,14 +17,6 @@ function college(database, type) {
         type: type.STRING,
         unique: true,
       },
-      // state: {
-      //   type: type.STRING,
-      //   allowNull: false,
-      // },
-      // city: {
-      //   type: type.STRING,
-      //   allowNull: false,
-      // },
       coursePrice: {
         type: type.STRING,
         allowNull: false,
@@ -73,27 +65,127 @@ function college(database, type) {
     try {
       let data;
       let result;
-      // console.log(req.body);
       if (Object.keys(req.body).length == 0) {
         data = await College.findAll({
-          attributes: ["name", "rating", "image", "stateId", "cityId"],
-          include: [{ model: models.States, attributes: ["name"], include:[{model: models.City, attributes: ["id","name"]}] }],
+          attributes: [
+            "name",
+            "rating",
+            "image",
+            "stateId",
+            "cityId",
+            "coursePrice",
+          ],
+          include: [
+            {
+              model: models.States,
+              attributes: ["name"],
+              include: [{ model: models.City, attributes: ["id", "name"] }],
+            },
+          ],
         });
         result = {
           error: 0,
           data: data,
         };
-      } else if(req.body.state){
+      } else if (req.body.state) {
         data = await College.findAll({
-          where: {stateId:{[Op.in]:req.body.state}},
-          attributes: ["name", "rating", "image", "stateId", "cityId"],
-          include: [{ model: models.States, attributes: ["name"], include:[{model: models.City, attributes: ["name", "id"]}] }],
+          where: { stateId: { [Op.in]: req.body.state } },
+          attributes: [
+            "name",
+            "rating",
+            "image",
+            "stateId",
+            "cityId",
+            "coursePrice",
+          ],
+          include: [
+            {
+              model: models.States,
+              attributes: ["name", "id"],
+              include: [{ model: models.City, attributes: ["name", "id"] }],
+            },
+          ],
         });
         result = {
           error: 0,
           data: data,
         };
-      }else {
+      } else if (req.body.city) {
+        data = await College.findAll({
+          where: { cityId: { [Op.in]: req.body.city } },
+          attributes: [
+            "name",
+            "rating",
+            "image",
+            "stateId",
+            "cityId",
+            "coursePrice",
+          ],
+          include: [
+            {
+              model: models.States,
+              attributes: ["name", "id"],
+              include: [{ model: models.City, attributes: ["name", "id"] }],
+            },
+          ],
+        });
+        result = {
+          error: 0,
+          data: data,
+        };
+      } else if (req.body.courseRange) {
+        data = await College.findAll({
+          where: { coursePrice: { [Op.between]: req.body.courseRange } },
+          attributes: [
+            "name",
+            "rating",
+            "image",
+            "stateId",
+            "cityId",
+            "coursePrice",
+          ],
+          include: [
+            {
+              model: models.States,
+              attributes: ["name", "id"],
+              include: [{ model: models.City, attributes: ["name", "id"] }],
+            },
+          ],
+        });
+        result = {
+          error: 0,
+          data: data,
+        };
+      } else if (req.body.courseType) {
+        data = await models.Course.findAll({
+          where: { type: { [Op.in]: req.body.courseType } },
+          include: [
+            {
+              model: College,
+              where: { courseId: { [Op.col]: "course.id" } },
+              attributes: [
+                "name",
+                "rating",
+                "image",
+                "stateId",
+                "cityId",
+                "coursePrice",
+              ],
+              include: [
+                {
+                  model: models.States,
+                  attributes: ["name", "id"],
+                  include: [{ model: models.City, attributes: ["name", "id"] }],
+                },
+              ],
+            },
+          ],
+        });
+        result = {
+          error: 0,
+          data: data,
+        };
+      } else {
         result = {
           message: "not found",
         };
@@ -177,6 +269,7 @@ function college(database, type) {
       // console.log(result);
       return result;
     } catch (error) {
+      console.log(error);
       throw new Error(error);
     }
   };
