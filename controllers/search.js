@@ -4,9 +4,9 @@ const { response } = require("../utils");
 let searchedCollegeData = async (req, res) => {
   try {
     let result = await db.College.findCollegeData(req, db);
-    let statesResult = await allStatesAndCities(req, res);
-    res.json({ result, statesResult });
+    res.status(200).send(response(result.error, result.message, result.data));
   } catch (error) {
+    console.log(error);
     res.status(500).send(response(1, error.message));
   }
 };
@@ -18,14 +18,14 @@ let allStatesAndCities = async (req, res) => {
       include: [
         {
           model: db.City,
-          where: { id: { [Op.col]: "state.cityId" } },
         },
       ],
     });
-    return result;
+    res.status(200).send(response(result.error, result.message, result));
   } catch (error) {
-    throw new Error(error);
+    console.log(error);
+    res.status(500).send(response(1, error.message));
   }
 };
 
-module.exports = { searchedCollegeData };
+module.exports = { searchedCollegeData, allStatesAndCities };

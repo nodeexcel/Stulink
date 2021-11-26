@@ -17,7 +17,7 @@ let allData = async (req, res) => {
 
 let getCollegeDetails = async (req, res) => {
   try {
-    let result = await db.College.findCollegeData(db);
+    let result = await db.College.findCollegeDataForHomePage(db);
     return result;
   } catch (error) {
     throw new Error(error);

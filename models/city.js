@@ -6,9 +6,9 @@ function city(database, type) {
     },
     { timestamps: false }
   );
-//   City.associate = (models) => {
-//     City.belongsTo(models.States, { foreignKey: "cityId" });
-//   };
+  City.associate = (models) => {
+    City.belongsTo(models.States, { foreignKey: "stateId" });
+  };
   return City;
 }
 

@@ -36,6 +36,38 @@ function college(database, type) {
     College.belongsTo(models.City, { foreignKey: "cityId" });
   };
 
+  let dataFunction = async (models, condition, variable, database) => {
+    try {
+      console.log();
+      let data = await database.findAll({
+        where: { [condition]: { [Op.in]: variable } },
+        attributes: [
+          "name",
+          "rating",
+          "image",
+          "stateId",
+          "cityId",
+          "coursePrice",
+          "address",
+        ],
+        include: [
+          {
+            model: models.States,
+            attributes: ["name", "id"],
+            include: [{ model: models.City, attributes: ["name", "id"] }],
+          },
+        ],
+      });
+      let result = {
+        error: 0,
+        data: data,
+      };
+      return result;
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+
   College.addCollege = async (req) => {
     try {
       let image = req.file.path;
@@ -61,6 +93,14 @@ function college(database, type) {
       throw new Error(error);
     }
   };
+  College.findCollegeDataForHomePage = async () => {
+    try {
+      let result = await College.findAll({});
+      return result;
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
   College.findCollegeData = async (req, models) => {
     try {
       let data;
@@ -74,11 +114,12 @@ function college(database, type) {
             "stateId",
             "cityId",
             "coursePrice",
+            "address",
           ],
           include: [
             {
               model: models.States,
-              attributes: ["name"],
+              attributes: ["name", "id"],
               include: [{ model: models.City, attributes: ["id", "name"] }],
             },
           ],
@@ -88,51 +129,15 @@ function college(database, type) {
           data: data,
         };
       } else if (req.body.state) {
-        data = await College.findAll({
-          where: { stateId: { [Op.in]: req.body.state } },
-          attributes: [
-            "name",
-            "rating",
-            "image",
-            "stateId",
-            "cityId",
-            "coursePrice",
-          ],
-          include: [
-            {
-              model: models.States,
-              attributes: ["name", "id"],
-              include: [{ model: models.City, attributes: ["name", "id"] }],
-            },
-          ],
-        });
-        result = {
-          error: 0,
-          data: data,
-        };
+        let database = College;
+        let state = "stateId";
+        let findFrom = req.body.state;
+        result = await dataFunction(models, state, findFrom, database);
       } else if (req.body.city) {
-        data = await College.findAll({
-          where: { cityId: { [Op.in]: req.body.city } },
-          attributes: [
-            "name",
-            "rating",
-            "image",
-            "stateId",
-            "cityId",
-            "coursePrice",
-          ],
-          include: [
-            {
-              model: models.States,
-              attributes: ["name", "id"],
-              include: [{ model: models.City, attributes: ["name", "id"] }],
-            },
-          ],
-        });
-        result = {
-          error: 0,
-          data: data,
-        };
+        let database = College;
+        let city = "cityId";
+        let findFrom = req.body.city;
+        result = await dataFunction(models, city, findFrom, database);
       } else if (req.body.courseRange) {
         data = await College.findAll({
           where: { coursePrice: { [Op.between]: req.body.courseRange } },
@@ -143,6 +148,7 @@ function college(database, type) {
             "stateId",
             "cityId",
             "coursePrice",
+            "address",
           ],
           include: [
             {
@@ -157,6 +163,11 @@ function college(database, type) {
           data: data,
         };
       } else if (req.body.courseType) {
+        // let database = models.Course;
+        // let findFrom = req.body.courseType;
+        // let course = "type";
+        // result = await dataFunction(models, course, findFrom, database);
+        // result;
         data = await models.Course.findAll({
           where: { type: { [Op.in]: req.body.courseType } },
           include: [
@@ -170,6 +181,7 @@ function college(database, type) {
                 "stateId",
                 "cityId",
                 "coursePrice",
+                "address",
               ],
               include: [
                 {
@@ -190,83 +202,6 @@ function college(database, type) {
           message: "not found",
         };
       }
-      // let states = [];
-      // let city = [];
-      // data = await College.findAll({attributes: ["state", "city"]});
-      // for(let state in data){
-      //   states.push(data[state].state);
-      //   city.push(data[state].city);
-      // }
-      // function onlyUnique(value, index, self) {
-      //   return self.indexOf(value) === index;
-      // }
-      // let uniqueStates = states.filter(onlyUnique);
-      // let uniqueCity = city.filter(onlyUnique);
-      // try {
-      //   data = await College.findAll({
-      //     attributes: ["name", "rating", "image", "state", "city"],
-      //     where: { name: req.body.name },
-      //   });
-      //   result = res(data);
-      // } catch (error) {
-      // try {
-      //   data = await College.findAll({
-      //     attributes: ["name", "rating", "image", "state", "city"],
-      //     where: {
-      //       [Op.and]: [
-      //         { state: { [Op.in]: req.body.state } },
-      //         { city: { [Op.in]: req.body.city } },
-      //         { coursePrice: { [Op.in]: req.body.coursePrice } },
-      //       ],
-      //     },
-      //   });
-      //   if (data.length > 0) {
-      //     result = res(data);
-      //   } else {
-      //     result = {
-      //       error: 0,
-      //       message: "nothing found",
-      //     };
-      //   }
-      // } catch (error) {
-      //   try {
-      //     console.log(78787);
-      //     data = await College.findAll({
-      //       attributes: ["name", "rating", "image", "state", "city"],
-      //       where: { state: { [Op.in]: req.body.state } },
-      //       include: [{ models: models.Course, where: { type: "graduate" } }],
-      //     });
-      //     console.log(data);
-      //     if (data.length > 0) {
-      //       result = res(data);
-      //     } else {
-      //       result = {
-      //         error: 1,
-      //         message: "nothing found",
-      //       };
-      //     }
-      //   } catch (error) {
-      //     try {
-      //       console.log(565656);
-      //       data = await College.findAll({
-      //         attributes: ["name", "rating", "image", "state", "city"],
-      //         include: [
-      //           { model: models.Course, where: { type: "undergraduate" } },
-      //         ],
-      //       });
-      //       result = await res(data);
-      //     } catch (error) {
-      //       console.log(error);
-      //       result = {
-      //         error: 1,
-      //         message: "no colleges found",
-      //       };
-      //     }
-      //   }
-      // }
-      // result.states = uniqueStates;
-      // result.city = uniqueCity;
-      // console.log(result);
       return result;
     } catch (error) {
       console.log(error);

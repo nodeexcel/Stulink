@@ -4,6 +4,6 @@ let { search } = require("../controllers");
 const { authForAllUser } = require("../middleware/auth");
 
 router.get("/searchHere", search.searchedCollegeData);
-// authForAllUser
+router.get("/allStates", search.allStatesAndCities);
 
 module.exports = router;

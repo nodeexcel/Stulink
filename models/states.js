@@ -16,7 +16,7 @@ function states(database, type) {
     { timestamps: false }
   );
   State.associate = (models) => {
-   State.belongsTo(models.City, {foreignKey:"cityId"})
+   State.hasMany(models.City, {foreignKey:"stateId"})
   }
   State.addStates = async (req) => {
     try {
