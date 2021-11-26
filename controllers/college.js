@@ -30,11 +30,19 @@ let getCollegeImages = async(req, res) => {
 let getCollegesDataById = async(req,res) => {
   try {
     let result = await db.College.getCollegeData(req, db);
-    // console.log(result);
     res.status(200).send(response(result.error, result.message, result.data));
   } catch (error) {
     res.status(500).send(response(1, error.message));
   }
 }
 
-module.exports = { addCollegeData,addCollegeGallery,getCollegeImages,getCollegesDataById };
+let getCollegeNews = async(req,res) => {
+  try {
+    let result = await db.College.getCollegeNewsData(req, db);
+    res.status(200).send(response(result.error, result.message, result.data));
+  } catch (error) {
+    res.status(500).send(response(1, error.message));
+  }
+}
+
+module.exports = { addCollegeData,addCollegeGallery,getCollegeImages,getCollegesDataById ,getCollegeNews};

@@ -33,6 +33,8 @@ function college(database, type) {
     College.belongsTo(models.Course, { foreignKey: "courseId" });
     College.belongsTo(models.States, { foreignKey: "stateId" });
     College.belongsTo(models.City, { foreignKey: "cityId" });
+    College.hasMany(models.News, { foreignKey: "collegeId" });
+    models.News.belongsTo(College, { foreignKey: "collegeId" });
   };
 
   let dataFunction = async (models, condition, variable, database) => {
@@ -253,37 +255,67 @@ function college(database, type) {
       let result;
       let data = await College.findOne({
         where: { id: req.body.collegeId },
-        attributes: ["logo", "image", "about", "name","address"],
-        include:[{
-          model: models.States,
-          attributes:["id","name"],
-          include:[{
-            model: models.City,
-            attributes:["id", "name"]
-          }]   
-        },{
-          model: models.Review,
-          where:{collegeId:{[Op.col]:"colleges.id"}}
-        }]
+        attributes: ["logo", "image", "about", "name", "address"],
+        include: [
+          {
+            model: models.States,
+            attributes: ["id", "name"],
+            include: [
+              {
+                model: models.City,
+                attributes: ["id", "name"],
+              },
+            ],
+          },
+          {
+            model: models.Review,
+            where: { collegeId: { [Op.col]: "colleges.id" } },
+          },
+          {
+            model: models.Gallery,
+            where: { collegeId: { [Op.col]: "colleges.id" } },
+          },
+        ],
       });
       // console.log(data);
-      if(data){
+      if (data) {
         result = {
-          error:0,
+          error: 0,
           data: data,
-        }
-      }else{
+        };
+      } else {
         result = {
-          error:1,
+          error: 1,
           message: "not found",
-        }
+        };
       }
       return result;
     } catch (error) {
       throw new Error(error);
     }
   };
-
+  College.getCollegeNewsData = async (req, models) => {
+    try {
+      let data = await models.News.findAll({
+        where: { collegeId: req.body.collegeId },
+      });
+      let result;
+      if (data.length > 0) {
+        result = {
+          error: 0,
+          data: data,
+        };
+      } else {
+        result = {
+          error: 1,
+          message: "nothing to show",
+        };
+      }
+      return result;
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
   return College;
 }
 
