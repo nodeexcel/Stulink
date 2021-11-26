@@ -6,12 +6,10 @@ function college(database, type) {
   const College = database.define(
     "colleges",
     {
+      logo: type.STRING,
       image: {
         type: type.STRING,
         allowNull: false,
-      },
-      rating: {
-        type: type.INTEGER,
       },
       name: {
         type: type.STRING,
@@ -25,6 +23,7 @@ function college(database, type) {
         type: type.STRING,
         allowNull: false,
       },
+      about: type.STRING,
     },
     { timestamps: false }
   );
@@ -163,11 +162,6 @@ function college(database, type) {
           data: data,
         };
       } else if (req.body.courseType) {
-        // let database = models.Course;
-        // let findFrom = req.body.courseType;
-        // let course = "type";
-        // result = await dataFunction(models, course, findFrom, database);
-        // result;
         data = await models.Course.findAll({
           where: { type: { [Op.in]: req.body.courseType } },
           include: [
@@ -253,6 +247,43 @@ function college(database, type) {
       throw new Error(error);
     }
   };
+
+  College.getCollegeData = async (req, models) => {
+    try {
+      let result;
+      let data = await College.findOne({
+        where: { id: req.body.collegeId },
+        attributes: ["logo", "image", "about", "name","address"],
+        include:[{
+          model: models.States,
+          attributes:["id","name"],
+          include:[{
+            model: models.City,
+            attributes:["id", "name"]
+          }]   
+        },{
+          model: models.Review,
+          where:{collegeId:{[Op.col]:"colleges.id"}}
+        }]
+      });
+      // console.log(data);
+      if(data){
+        result = {
+          error:0,
+          data: data,
+        }
+      }else{
+        result = {
+          error:1,
+          message: "not found",
+        }
+      }
+      return result;
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+
   return College;
 }
 
