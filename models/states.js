@@ -15,6 +15,9 @@ function states(database, type) {
     },
     { timestamps: false }
   );
+  State.associate = (models) => {
+   State.belongsTo(models.City, {foreignKey:"cityId"})
+  }
   State.addStates = async (req) => {
     try {
       let data = req.file.path;

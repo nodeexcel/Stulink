@@ -14,8 +14,9 @@ const Gallery = require("./gallery");
 const FriendRequest = require("./friendRequest");
 const UserPrivacy = require("./users/userPrivacy");
 const UserSettings = require("./users/usersettings");
-
+const City = require("./city")
 module.exports = {
+  City,
   User,
   College,
   Course,
