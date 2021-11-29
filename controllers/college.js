@@ -27,4 +27,22 @@ let getCollegeImages = async(req, res) => {
   }
 }
 
-module.exports = { addCollegeData,addCollegeGallery,getCollegeImages };
+let getCollegesDataById = async(req,res) => {
+  try {
+    let result = await db.College.getCollegeData(req, db);
+    res.status(200).send(response(result.error, result.message, result.data));
+  } catch (error) {
+    res.status(500).send(response(1, error.message));
+  }
+}
+
+let getCollegeNews = async(req,res) => {
+  try {
+    let result = await db.College.getCollegeNewsData(req, db);
+    res.status(200).send(response(result.error, result.message, result.data));
+  } catch (error) {
+    res.status(500).send(response(1, error.message));
+  }
+}
+
+module.exports = { addCollegeData,addCollegeGallery,getCollegeImages,getCollegesDataById ,getCollegeNews};

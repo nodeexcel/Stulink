@@ -22,6 +22,8 @@ function courses(database, type) {
         allowNull: false,
       },
       branch: type.STRING,
+      criteria_and_eligibility: type.STRING,
+      regular_Or_not: type.STRING,
     },
     { timestamps: false }
   );
@@ -57,7 +59,9 @@ function courses(database, type) {
   Courses.getAllCourse = async (req) => {
     try {
       let result;
-      let foundCourses = await Courses.findAll({ attributes: ["name","type"] });
+      let foundCourses = await Courses.findAll({
+        attributes: ["name", "type", "branch", "image"],
+      });
       if (foundCourses.length > 0) {
         result = {
           error: 0,
@@ -77,7 +81,7 @@ function courses(database, type) {
   };
 
   Courses.courseDataCount = async (models) => {
-    try { 
+    try {
       let foundCourse = await Courses.findAll({
         attributes: {
           include: [[fn("COUNT", col("colleges.id")), "collegeCount"]],
@@ -100,6 +104,45 @@ function courses(database, type) {
       throw new Error(error);
     }
   };
+  Courses.getCourseType = async (req) => {
+    try {
+      let result;
+      let data = await Courses.findAll({
+        where: { category: req.body.category },
+      });
+      if (data.length > 0) {
+        result = {
+          error: 0,
+          data: data,
+        };
+      } else {
+        result = {
+          error: 0,
+          message: "nothing to show",
+        };
+      }
+      return result;
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+
+  Courses.getCourseColleges = async (req, models) => {
+    try {
+      let result;
+      let data = await models.College.findAll({
+        where: { courseId: req.body.courseId },
+      });
+      result = {
+        error:0,
+        data: data
+      }
+      return result;
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+
   return Courses;
 }
 

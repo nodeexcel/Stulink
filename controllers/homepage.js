@@ -65,4 +65,4 @@ let getNewsData = async (req, res) => {
   }
 };
 
-module.exports = { allData, courseDetailsForOtherPage };
+module.exports = { allData, courseDetailsForOtherPage, getCourseDetails };

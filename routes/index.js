@@ -7,4 +7,5 @@ const states = require("./states");
 const news = require("./news");
 const course = require("./course");
 const search = require("./search");
-module.exports = { users, root, homePage, college, jobs, states, news, course, states,search };
+const exam = require("./exam")
+module.exports = { users, root, homePage, college, jobs, states, news, course, states,search, exam };

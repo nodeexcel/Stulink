@@ -14,8 +14,15 @@ const Gallery = require("./gallery");
 const FriendRequest = require("./friendRequest");
 const UserPrivacy = require("./users/userPrivacy");
 const UserSettings = require("./users/usersettings");
-const City = require("./city")
+const City = require("./city");
+const Ratings = require("./ratings");
+const Review = require("./reviews");
+const Exam = require("./exam");
+
 module.exports = {
+  Exam,
+  Review,
+  Ratings,
   City,
   User,
   College,
