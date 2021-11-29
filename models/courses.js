@@ -126,6 +126,23 @@ function courses(database, type) {
       throw new Error(error);
     }
   };
+
+  Courses.getCourseColleges = async (req, models) => {
+    try {
+      let result;
+      let data = await models.College.findAll({
+        where: { courseId: req.body.courseId },
+      });
+      result = {
+        error:0,
+        data: data
+      }
+      return result;
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+
   return Courses;
 }
 

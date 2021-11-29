@@ -9,5 +9,7 @@ router.post(
 );
 router.get("/allCourse", homepage.courseDetailsForOtherPage);
 router.get("/getCourseByType", course.getCourseByType)
+router.get("/getCourseRelatedColleges", course.getCourseRelatedColleges);
+router.get("/getCourseExams", course.getCourseExams);
 
 module.exports = router;

@@ -17,7 +17,10 @@ const UserSettings = require("./users/usersettings");
 const City = require("./city");
 const Ratings = require("./ratings");
 const Review = require("./reviews");
+const Exam = require("./exam");
+
 module.exports = {
+  Exam,
   Review,
   Ratings,
   City,
