@@ -2,7 +2,7 @@ const User = require("./users/users");
 const College = require("./college");
 const Course = require("./course/courses");
 const News = require("./news");
-const Jobs = require("./jobs");
+const Jobs = require("./jobs/jobs");
 const States = require("./states");
 const UserProfile = require("./users/userProfile");
 const Post = require("./posts");
@@ -20,8 +20,10 @@ const Review = require("./reviews");
 const Exam = require("./exam");
 const Branch = require("./course/branch")
 const Overview = require("./course/overview")
+const JobDetail = require("./jobs/jobDetails");
 
 module.exports = {
+  JobDetail,
   Overview,
   Branch,
   Exam,
