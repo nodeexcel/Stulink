@@ -1,6 +1,6 @@
 const User = require("./users/users");
 const College = require("./college");
-const Course = require("./courses");
+const Course = require("./course/courses");
 const News = require("./news");
 const Jobs = require("./jobs");
 const States = require("./states");
@@ -18,8 +18,12 @@ const City = require("./city");
 const Ratings = require("./ratings");
 const Review = require("./reviews");
 const Exam = require("./exam");
+const Branch = require("./course/branch")
+const Overview = require("./course/overview")
 
 module.exports = {
+  Overview,
+  Branch,
   Exam,
   Review,
   Ratings,
