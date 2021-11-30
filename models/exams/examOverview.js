@@ -13,7 +13,7 @@ function examOverview(database, type) {
   );
 
   ExamOverview.associate = (models) => {
-    models.Exam.hasMany(ExamOverview, { foreignKey: "examId" });
+    models.Exam.hasOne(ExamOverview, { foreignKey: "examId" });
     ExamOverview.belongsTo(models.Exam, { foreignKey: "examId" });
   };
 

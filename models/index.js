@@ -18,12 +18,13 @@ const City = require("./city");
 const Ratings = require("./ratings");
 const Review = require("./reviews");
 const Exam = require("./exams/exam");
-const Branch = require("./course/branch")
-const Overview = require("./course/overview")
+const Branch = require("./course/branch");
+const Overview = require("./course/overview");
 const JobDetail = require("./jobs/jobDetails");
-const ExamOverview = require("./exams/examOverview")
-
+const ExamOverview = require("./exams/examOverview");
+const ApplicationGuidelines = require("./exams/applicationGuidlines");
 module.exports = {
+  ApplicationGuidelines,
   ExamOverview,
   JobDetail,
   Overview,

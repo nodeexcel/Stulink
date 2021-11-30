@@ -28,4 +28,24 @@ let getExamOverview = async (req, res) => {
   }
 };
 
-module.exports = { addExams, addExamOverview ,getExamOverview};
+let addApplicationInformation = async (req, res) => {
+  try {
+    let result = await db.ApplicationGuidelines.addApplication(req,db);
+    // console.log(result);
+    res.status(200).send(response(result.error, result.message, result.data));
+  } catch (error) {
+    res.status(500).send(response(1, error.message));
+  }
+};
+
+let getApplicationInfo = async (req, res) => {
+  try {
+    let result = await db.ApplicationGuidelines.getApplicationInfoData(req,db);
+    // console.log(result);
+    res.status(200).send(response(result.error, result.message, result.data));
+  } catch (error) {
+    res.status(500).send(response(1, error.message));
+  }
+};
+
+module.exports = { addExams, addExamOverview ,getExamOverview,addApplicationInformation, getApplicationInfo};
