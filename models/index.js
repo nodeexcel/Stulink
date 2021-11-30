@@ -23,7 +23,10 @@ const Overview = require("./course/overview");
 const JobDetail = require("./jobs/jobDetails");
 const ExamOverview = require("./exams/examOverview");
 const ApplicationGuidelines = require("./exams/applicationGuidlines");
+const RegistrationInfo = require("./exams/registrationInfo");
+
 module.exports = {
+  RegistrationInfo,
   ApplicationGuidelines,
   ExamOverview,
   JobDetail,
