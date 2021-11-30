@@ -10,4 +10,22 @@ let addExams = async (req, res) => {
   }
 };
 
-module.exports = { addExams };
+let addExamOverview = async (req, res) => {
+  try {
+    let result = await db.ExamOverview.addExamOverviewData(req);
+    res.status(200).send(response(result.error, result.message, result.data));
+  } catch (error) {
+    res.status(500).send(response(1, error.message));
+  }
+};
+
+let getExamOverview = async (req, res) => {
+  try {
+    let result = await db.ExamOverview.getExamOverviewData(req,db);
+    res.status(200).send(response(result.error, result.message, result.data));
+  } catch (error) {
+    res.status(500).send(response(1, error.message));
+  }
+};
+
+module.exports = { addExams, addExamOverview ,getExamOverview};
