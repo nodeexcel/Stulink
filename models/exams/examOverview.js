@@ -19,19 +19,27 @@ function examOverview(database, type) {
 
   ExamOverview.addExamOverviewData = async (req) => {
     try {
-      let data = await ExamOverview.create({
-        detail: req.body.detail,
-        highlights: req.body.highlights,
-        registration: req.body.registration,
-        examPattern: req.body.examPattern,
-        syllabus: req.body.syllabus,
-        examId: req.body.examId,
-      });
-      let result = {
-        error: 0,
-        message: "exam overview added",
-        data: data,
-      };
+      let result;
+      if (Object.keys(req.body).length == 0) {
+        result = {
+          error: 1,
+          message: "nothing to add",
+        };
+      } else {
+        let data = await ExamOverview.create({
+          detail: req.body.detail,
+          highlights: req.body.highlights,
+          registration: req.body.registration,
+          examPattern: req.body.examPattern,
+          syllabus: req.body.syllabus,
+          examId: req.body.examId,
+        });
+        result = {
+          error: 0,
+          message: "exam overview added",
+          data: data,
+        };
+      }
       return result;
     } catch (error) {
       throw new Error(error);
@@ -39,7 +47,7 @@ function examOverview(database, type) {
   };
   ExamOverview.getExamOverviewData = async (req, models) => {
     try {
-      let data = await ExamOverview.findAll({
+      let data = await ExamOverview.findOne({
         where: { examId: req.body.examId },
         include: {
           model: models.Exam,
@@ -50,10 +58,10 @@ function examOverview(database, type) {
             attributes: ["name"],
             where: { id: { [Op.col]: "exam.courseId" } },
             include: {
-                model: models.College,
-                attributes: ["name"],
-                where: { courseId: { [Op.col]: "exam.courseId" } },
-              },
+              model: models.College,
+              attributes: ["name"],
+              where: { courseId: { [Op.col]: "exam.courseId" } },
+            },
           },
         },
       });

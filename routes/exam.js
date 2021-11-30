@@ -11,5 +11,7 @@ router.post("/addRegistrationInfo", exam.addRegistrationInfo);
 router.get("/getRegistrationInfo", exam.getRegistrationInfo);
 router.post("/addSyllabus", exam.addSyllabus);
 router.get("/getSyllabus", exam.getSyllabus);
+router.post("/addMocktestInfo", exam.addMocktestInfo);
+router.get("/getmocktestinfo", exam.getmocktestinfo)
 
 module.exports = router;

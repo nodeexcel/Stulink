@@ -15,17 +15,25 @@ function registrationInfo(database, type) {
   };
   RegistrationInfo.addRegistrationInfoData = async (req) => {
     try {
-      let data = await RegistrationInfo.create({
-        eligibility: req.body.eligibility,
-        documents: req.body.documents,
-        registrationFee: req.body.registrationFee,
-        form_correction: req.body.form_correction,
-        examId: req.body.examId,
-      });
-      let result = {
-        error: 0,
-        message: "registration info added",
-      };
+      let result;
+      if (Object.keys(req.body).length == 0) {
+        result = {
+          error: 1,
+          message: "nothing to add",
+        };
+      } else {
+        let data = await RegistrationInfo.create({
+          eligibility: req.body.eligibility,
+          documents: req.body.documents,
+          registrationFee: req.body.registrationFee,
+          form_correction: req.body.form_correction,
+          examId: req.body.examId,
+        });
+        result = {
+          error: 0,
+          message: "registration info added",
+        };
+      }
       return result;
     } catch (error) {
       throw new Error(error);
@@ -40,7 +48,7 @@ function registrationInfo(database, type) {
           attributes: ["name"],
           include: {
             model: models.ApplicationGuidelines,
-            attributes: ["registrationDetail"]
+            attributes: ["registrationDetail"],
           },
         },
       });

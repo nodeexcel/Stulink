@@ -80,8 +80,26 @@ let getSyllabus = async (req, res) => {
     res.status(500).send(response(1, error.message));
   }
 };
+let addMocktestInfo = async (req, res) => {
+  try {
+    let result = await db.MockTest.addMocktestInfoData(req, db);
+    res.status(200).send(response(result.error, result.message, result.data));
+  } catch (error) {
+    res.status(500).send(response(1, error.message));
+  }
+};
+let getmocktestinfo = async (req, res) => {
+  try {
+    let result = await db.MockTest.getmocktestinfoData(req, db);
+    res.status(200).send(response(result.error, result.message, result.data));
+  } catch (error) {
+    res.status(500).send(response(1, error.message));
+  }
+};
 
 module.exports = {
+  getmocktestinfo,
+  addMocktestInfo,
   getSyllabus,
   addSyllabus,
   addExams,

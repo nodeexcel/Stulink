@@ -10,14 +10,22 @@ function syllabus(database, type) {
   };
   Syllabus.addSyllabusData = async (req) => {
     try {
-      let data = await Syllabus.create({
-        syllabus: req.body.syllabus,
-        examId: req.body.examId,
-      });
-      let result = {
-        error: 0,
-        message: "syllabus added",
-      };
+      let result;
+      if (Object.keys(req.body).length == 0) {
+        result = {
+          error: 1,
+          message: "nothing to add",
+        };
+      } else {
+        let data = await Syllabus.create({
+          syllabus: req.body.syllabus,
+          examId: req.body.examId,
+        });
+        result = {
+          error: 0,
+          message: "syllabus added",
+        };
+      }
       return result;
     } catch (error) {
       throw new Error(error);

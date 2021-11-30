@@ -25,8 +25,10 @@ const ExamOverview = require("./exams/examOverview");
 const ApplicationGuidelines = require("./exams/applicationGuidlines");
 const RegistrationInfo = require("./exams/registrationInfo");
 const Syllabus = require("./exams/syllabus");
+const MockTest = require("./exams/mockTest");
 
 module.exports = {
+  MockTest,
   Syllabus,
   RegistrationInfo,
   ApplicationGuidelines,

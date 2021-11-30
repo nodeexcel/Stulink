@@ -16,18 +16,27 @@ function applicationGuidelines(database, type) {
   };
   ApplicationGuidelines.addApplication = async (req) => {
     try {
-      let data = await ApplicationGuidelines.create({
-        detail: req.body.detail,
-        applicationForm: req.body.applicationForm,
-        registrationDetail: req.body.registrationDetail,
-        applicationFee_offline: req.body.applicationFee_offline,
-        applicationFee_online: req.body.applicationFee_online,
-        examId: req.body.examId,
-      });
-      let result = {
-        error: 0,
-        message: "appplication guidelines added",
-      };
+      let result;
+      if (Object.keys(req.body).length == 0) {
+        result = {
+          error: 1,
+          message: "nothing to show",
+        };
+      } else {
+        let data = await ApplicationGuidelines.create({
+          detail: req.body.detail,
+          applicationForm: req.body.applicationForm,
+          registrationDetail: req.body.registrationDetail,
+          applicationFee_offline: req.body.applicationFee_offline,
+          applicationFee_online: req.body.applicationFee_online,
+          examId: req.body.examId,
+        });
+        result = {
+          error: 0,
+          message: "appplication guidelines added",
+        };
+      }
+
       return result;
     } catch (error) {
       throw new Error(error);
