@@ -31,7 +31,6 @@ let getExamOverview = async (req, res) => {
 let addApplicationInformation = async (req, res) => {
   try {
     let result = await db.ApplicationGuidelines.addApplication(req, db);
-    // console.log(result);
     res.status(200).send(response(result.error, result.message, result.data));
   } catch (error) {
     res.status(500).send(response(1, error.message));
@@ -41,7 +40,6 @@ let addApplicationInformation = async (req, res) => {
 let getApplicationInfo = async (req, res) => {
   try {
     let result = await db.ApplicationGuidelines.getApplicationInfoData(req, db);
-    // console.log(result);
     res.status(200).send(response(result.error, result.message, result.data));
   } catch (error) {
     res.status(500).send(response(1, error.message));
@@ -50,7 +48,6 @@ let getApplicationInfo = async (req, res) => {
 let addRegistrationInfo = async (req, res) => {
   try {
     let result = await db.RegistrationInfo.addRegistrationInfoData(req, db);
-    // console.log(result);
     res.status(200).send(response(result.error, result.message, result.data));
   } catch (error) {
     res.status(500).send(response(1, error.message));
@@ -60,7 +57,24 @@ let addRegistrationInfo = async (req, res) => {
 let getRegistrationInfo = async (req, res) => {
   try {
     let result = await db.RegistrationInfo.getRegistrationInfoData(req, db);
-    // console.log(result);
+    res.status(200).send(response(result.error, result.message, result.data));
+  } catch (error) {
+    res.status(500).send(response(1, error.message));
+  }
+};
+
+let addSyllabus = async (req, res) => {
+  try {
+    let result = await db.Syllabus.addSyllabusData(req, db);
+    res.status(200).send(response(result.error, result.message, result.data));
+  } catch (error) {
+    res.status(500).send(response(1, error.message));
+  }
+};
+
+let getSyllabus = async (req, res) => {
+  try {
+    let result = await db.Syllabus.getSyllabusData(req, db);
     res.status(200).send(response(result.error, result.message, result.data));
   } catch (error) {
     res.status(500).send(response(1, error.message));
@@ -68,11 +82,13 @@ let getRegistrationInfo = async (req, res) => {
 };
 
 module.exports = {
+  getSyllabus,
+  addSyllabus,
   addExams,
   addExamOverview,
   getExamOverview,
   addApplicationInformation,
   getApplicationInfo,
   addRegistrationInfo,
-  getRegistrationInfo
+  getRegistrationInfo,
 };
