@@ -18,23 +18,23 @@ function exam(database, type) {
 
   Exam.addExamData = async (req) => {
     try {
-      let data = await Exam.create({
-        name: req.body.name,
-        examDate: req.body.examDate,
-        applicationDate: req.body.applicationDate,
-        resultDate: req.body.resultDate,
-        courseId: req.body.courseId,
-      });
       let result;
-      if (data) {
+      if (Object.keys(req.body).length == 0) {
+        result = {
+          error: 1,
+          message: "nothing to add",
+        };
+      } else {
+        let data = await Exam.create({
+          name: req.body.name,
+          examDate: req.body.examDate,
+          applicationDate: req.body.applicationDate,
+          resultDate: req.body.resultDate,
+          courseId: req.body.courseId,
+        });
         result = {
           error: 0,
           data: data,
-        };
-      } else {
-        result = {
-          error: 1,
-          message: "error while adding Exam Data",
         };
       }
       return result;

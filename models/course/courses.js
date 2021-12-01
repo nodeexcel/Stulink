@@ -21,9 +21,6 @@ function courses(database, type) {
         type: type.STRING,
         allowNull: false,
       },
-      branch: type.STRING,
-      criteria_and_eligibility: type.STRING,
-      regular_Or_not: type.STRING,
     },
     { timestamps: false }
   );
@@ -134,9 +131,9 @@ function courses(database, type) {
         where: { courseId: req.body.courseId },
       });
       result = {
-        error:0,
-        data: data
-      }
+        error: 0,
+        data: data,
+      };
       return result;
     } catch (error) {
       throw new Error(error);

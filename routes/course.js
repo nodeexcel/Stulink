@@ -7,9 +7,13 @@ router.post(
   multerUpload.upload.single("image"),
   course.addCourseDetails
 );
+router.post("/addBranchForCourse", course.addBranchForCourse)
 router.get("/allCourse", homepage.courseDetailsForOtherPage);
 router.get("/getCourseByType", course.getCourseByType)
 router.get("/getCourseRelatedColleges", course.getCourseRelatedColleges);
 router.get("/getCourseExams", course.getCourseExams);
+router.get("/getTopCourse", course.getTopCourse);
+router.post("/addCourseOverview", course.addCourseOverview);
+router.get("/getCourseOverviews", course.getCourseOverview);
 
 module.exports = router;
