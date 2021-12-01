@@ -13,5 +13,12 @@ router.post("/addSyllabus", exam.addSyllabus);
 router.get("/getSyllabus", exam.getSyllabus);
 router.post("/addMocktestInfo", exam.addMocktestInfo);
 router.get("/getmocktestinfo", exam.getmocktestinfo)
+router.post("/addAdmitcardInfo", exam.addAdmitcardInfo)
+router.get("/getAdmitcardInfo", exam.getAdmitcardInfo)
+router.post("/addRankPredictorInfo", exam.addRankPredictor);
+router.get("/getRankPredictorInfo", exam.getRankPredictor)
+router.post("/addcuttoffinfo", exam.addcuttoffinfo);
+router.get("/getcuttoffinfo", exam.getcuttoffinfo)
+// router.post("/")
 
 module.exports = router;

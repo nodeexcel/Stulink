@@ -1,6 +1,5 @@
 const { Op } = require("sequelize");
 const cloudinary = require("cloudinary");
-const { res } = require("../utils");
 
 function college(database, type) {
   const College = database.define(
@@ -275,6 +274,9 @@ function college(database, type) {
             model: models.Gallery,
             where: { collegeId: { [Op.col]: "colleges.id" } },
           },
+          {
+            model: models.Ratings
+          }
         ],
       });
       // console.log(data);

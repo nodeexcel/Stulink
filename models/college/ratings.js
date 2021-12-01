@@ -14,7 +14,7 @@ function ratings(database, type) {
     { timestamps: false }
   );
   Ratings.associate = (models) => {
-   models.College.hasOne(Ratings,{foreignKey: "collegeId"});
+   models.College.hasMany(Ratings,{foreignKey: "collegeId"});
    Ratings.belongsTo(models.College, {foreignKey: "collegeId"});
   };
   return Ratings;

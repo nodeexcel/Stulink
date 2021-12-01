@@ -12,5 +12,7 @@ router.post("/addCollegeGallery", multerUpload.upload.single("image"), college.a
 router.get("/getCollegeImages", college.getCollegeImages);
 router.get("/getCollegeById", college.getCollegesDataById);
 router.get("/getCollegeNews", college.getCollegeNews);
+router.post("/addadmissioninfo", college.addAdmissionInfo);
+router.get("/getadmissioninfo", college.getAdmissionInfo);
 
 module.exports = router;

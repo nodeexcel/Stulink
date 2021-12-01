@@ -1,5 +1,5 @@
 const User = require("./users/users");
-const College = require("./college");
+const College = require("./college/college");
 const Course = require("./course/courses");
 const News = require("./news");
 const Jobs = require("./jobs/jobs");
@@ -15,7 +15,7 @@ const FriendRequest = require("./friendRequest");
 const UserPrivacy = require("./users/userPrivacy");
 const UserSettings = require("./users/usersettings");
 const City = require("./city");
-const Ratings = require("./ratings");
+const Ratings = require("./college/ratings");
 const Review = require("./reviews");
 const Exam = require("./exams/exam");
 const Branch = require("./course/branch");
@@ -26,8 +26,16 @@ const ApplicationGuidelines = require("./exams/applicationGuidlines");
 const RegistrationInfo = require("./exams/registrationInfo");
 const Syllabus = require("./exams/syllabus");
 const MockTest = require("./exams/mockTest");
+const AdmitCardInfo = require("./exams/admitCardInfo");
+const RankPredictor = require("./exams/rankPredictor");
+const CutOffInfo = require("./exams/cutOff");
+const AdmissionInfo = require("./college/admissionInfo");
 
 module.exports = {
+  AdmissionInfo,
+  CutOffInfo,
+  RankPredictor,
+  AdmitCardInfo,
   MockTest,
   Syllabus,
   RegistrationInfo,

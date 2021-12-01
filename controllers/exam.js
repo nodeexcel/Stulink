@@ -97,7 +97,62 @@ let getmocktestinfo = async (req, res) => {
   }
 };
 
+let addAdmitcardInfo = async (req, res) => {
+  try {
+    let result = await db.AdmitCardInfo.addAdmitcardInfoData(req, db);
+    res.status(200).send(response(result.error, result.message, result.data));
+  } catch (error) {
+    res.status(500).send(response(1, error.message));
+  }
+};
+let getAdmitcardInfo = async (req, res) => {
+  try {
+    let result = await db.AdmitCardInfo.getAdmitcardInfoData(req, db);
+    res.status(200).send(response(result.error, result.message, result.data));
+  } catch (error) {
+    res.status(500).send(response(1, error.message));
+  }
+};
+let addRankPredictor = async (req, res) => {
+  try {
+    let result = await db.RankPredictor.addRankPredictorInfo(req, db);
+    res.status(200).send(response(result.error, result.message, result.data));
+  } catch (error) {
+    res.status(500).send(response(1, error.message));
+  }
+};
+let getRankPredictor = async (req, res) => {
+  try {
+    let result = await db.RankPredictor.getRankPredictorInfo(req, db);
+    res.status(200).send(response(result.error, result.message, result.data));
+  } catch (error) {
+    res.status(500).send(response(1, error.message));
+  }
+};
+let addcuttoffinfo = async (req, res) => {
+  try {
+    let result = await db.CutOffInfo.addCutOffInfoData(req, db);
+    res.status(200).send(response(result.error, result.message, result.data));
+  } catch (error) {
+    res.status(500).send(response(1, error.message));
+  }
+};
+let getcuttoffinfo = async (req, res) => {
+  try {
+    let result = await db.CutOffInfo.getCutOffInfoData(req, db);
+    res.status(200).send(response(result.error, result.message, result.data));
+  } catch (error) {
+    res.status(500).send(response(1, error.message));
+  }
+};
+
 module.exports = {
+  getcuttoffinfo,
+  addcuttoffinfo,
+  getRankPredictor,
+  addRankPredictor,
+  getAdmitcardInfo,
+  addAdmitcardInfo,
   getmocktestinfo,
   addMocktestInfo,
   getSyllabus,
